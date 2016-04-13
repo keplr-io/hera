@@ -48,7 +48,8 @@ class HeraCallback(Callback):
             'batch-end',
             to_json({
                 'model': self.model_config,
-                'logs':to_json(logs)
+                'logs':to_json(logs),
+                'outputs': get_model_outputs_map(self.model)
             })
         )
 
@@ -60,3 +61,34 @@ class HeraCallback(Callback):
                 'logs':to_json(logs)
             })
         )
+
+
+from keras import backend as K
+
+def get_model_outputs_map(model):
+
+    def add_layer_outputs_to_map(current_map, layer_name):
+        current_map[layer_name] = get_layer_outputs(
+            model,
+            layer_name,
+            model.layers[0].input
+        )
+        return current_map
+
+    print(model.layers)
+    return reduce(
+        add_layer_outputs_to_map,
+        model.layers,
+        {}
+    )
+
+def get_layer_outputs(model, layer_name, model_input):
+
+    return K.function(
+        [
+            model.layers[0].input
+        ],
+        [
+            model.layers[layer_name].output
+        ]
+    )([model_input])[0].tolist()
