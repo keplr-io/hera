@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 
-export const Counter = (props) => (
+export const DataView = (props) => (
     <div>
         <h2>
             Data
@@ -8,17 +8,15 @@ export const Counter = (props) => (
         <div>
             <pre>
                 {
-                    JSON.stringify(this.props.data, null, 4)
+                    JSON.stringify(props.data, null, 4)
                 }
             </pre>
         </div>
     </div>
 );
 
-Counter.propTypes = {
-    counter: React.PropTypes.number.isRequired,
-    doubleAsync: React.PropTypes.func.isRequired,
-    increment: React.PropTypes.func.isRequired
+DataView.propTypes = {
+    data: React.PropTypes.object.isRequired
 };
 
-export default Counter;
+export default DataView;

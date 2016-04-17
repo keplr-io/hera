@@ -12,7 +12,7 @@ export default (store) => ({
             const reducer = require('./modules/data').default;
 
             /*  Add the reducer to the store on key 'counter'  */
-            injectReducer(store, { key: 'view', reducer });
+            injectReducer(store, { key: 'data', reducer });
 
             /*  Return getComponent   */
             cb(null, DataView);

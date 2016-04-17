@@ -9,14 +9,17 @@ io.on('connection', (socket) => {
 
     socket.on('train-begin', (data) => {
         console.log('train-begin', data);
+        socket.emit('data', data);
     });
 
     socket.on('batch-end', (data) => {
         console.log('batch-end', data);
+        socket.emit('data', data);
     });
 
     socket.on('epoch-end', (data) => {
         console.log('epoch-end', data);
+        socket.emit('data', data);
     });
 
     socket.on('disconnect', () => {

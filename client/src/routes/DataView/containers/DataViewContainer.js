@@ -1,8 +1,12 @@
 import { connect } from 'react-redux';
+import { connectToSocket } from '../services/sockets';
+
 import DataView from 'components/DataView';
 
+// connectToSocket();
+
 const mapStateToProps = (state) => ({
-    counter: state.counter
+    data: state.data
 });
 
 export default connect(mapStateToProps, {})(DataView);

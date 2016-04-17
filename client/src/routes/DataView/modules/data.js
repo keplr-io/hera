@@ -1,5 +1,9 @@
 import Update from 'react-addons-update';
 
+const defaultState = {
+    data: {}
+};
+
 /**
  *  Actions
  */
@@ -21,17 +25,17 @@ const ActionHandlers = {
     )
 };
 
-export default function dataReducer (state, action) {
+export default function dataReducer (state = defaultState, action) {
     return ActionHandlers[action.type]
         ? ActionHandlers[action.type](state, action) : state;
 }
 
 /**
  * Utilities
-*/
+ */
 
 function getUpdatedDataState (state, newData) {
-    return Update({
+    return Update(state, {
         data: {
             $merge: newData
         }
