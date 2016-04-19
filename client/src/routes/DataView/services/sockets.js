@@ -3,9 +3,9 @@ import updateData from '../modules/data';
 import URLs from 'constants/urls';
 
 export function connectToSocket() {
-    let socket = io(URLs.sockets);
+    let socket = io.connect(URLs.sockets);
 
-    socket.on('data', function (data) {
+    socket.on('new-data', function (data) {
         updateData(data || {});
     });
 

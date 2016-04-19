@@ -4,9 +4,12 @@ import numpy as np
 
 def get_json_type(obj):
 
+    if isinstance(obj, np.ndarray):
+        return obj.tolist()
+
     # if obj is any numpy type
     if type(obj).__module__ == np.__name__:
-        return obj.item();
+        return obj.item()
 
     # if obj is a python 'type'
     if type(obj).__name__ == type.__name__:
@@ -67,28 +70,21 @@ from keras import backend as K
 
 def get_model_outputs_map(model):
 
-    def add_layer_outputs_to_map(current_map, layer_name):
-        current_map[layer_name] = get_layer_outputs(
+    def add_layer_outputs_to_map(current_map, layer):
+
+        current_map[layer.name] = get_layer_outputs(
             model,
-            layer_name,
-            model.layers[0].input
+            layer
         )
         return current_map
 
-    print(model.layers)
     return reduce(
         add_layer_outputs_to_map,
         model.layers,
         {}
     )
 
-def get_layer_outputs(model, layer_name, model_input):
-
-    return K.function(
-        [
-            model.layers[0].input
-        ],
-        [
-            model.layers[layer_name].output
-        ]
-    )([model_input])[0].tolist()
+def get_layer_outputs(model, layer):
+    return K.batch_get_value(
+        layer.trainable_weights + layer.non_trainable_weights
+    )

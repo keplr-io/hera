@@ -3,7 +3,7 @@ import { connectToSocket } from '../services/sockets';
 
 import DataView from 'components/DataView';
 
-// connectToSocket();
+connectToSocket();
 
 const mapStateToProps = (state) => ({
     data: state.data
