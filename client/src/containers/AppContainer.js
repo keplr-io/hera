@@ -1,7 +1,9 @@
 import React, { PropTypes } from 'react'
 import { Router } from 'react-router'
 import { Provider } from 'react-redux'
+import { connectToSocket } from 'services/sockets';
 
+let socketConnection = null;
 class AppContainer extends React.Component {
   static propTypes = {
     history: PropTypes.object.isRequired,
@@ -12,6 +14,10 @@ class AppContainer extends React.Component {
 
   render () {
     const { history, routes, routerKey, store } = this.props
+
+    if (!socketConnection) {
+        socketConnection = connectToSocket(store);
+    }
 
     return (
       <Provider store={store}>

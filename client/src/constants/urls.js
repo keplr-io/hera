@@ -1,3 +1,3 @@
 export default {
-    sockets: 'http://localhost:3000'
+    sockets: 'http://localhost:4000'
 };

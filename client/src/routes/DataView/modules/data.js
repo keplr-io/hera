@@ -15,13 +15,20 @@ export function updateData (newData) {
     };
 }
 
+export const updateDataAsync = (newData) => {
+    return (dispatch) => dispatch({
+        type: 'updateData',
+        data: newData
+    });
+};
+
 /**
  * Reducers
  */
 
 const ActionHandlers = {
     updateData: (state, action) => getUpdatedDataState(
-        state, action.payload
+        state, action.data
     )
 };
 
@@ -37,7 +44,7 @@ export default function dataReducer (state = defaultState, action) {
 function getUpdatedDataState (state, newData) {
     return Update(state, {
         data: {
-            $merge: newData
+            $set: newData
         }
     });
 }

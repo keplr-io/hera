@@ -9,19 +9,17 @@ io.on('connection', (socket) => {
 
     socket.on('train-begin', (data) => {
         console.log('train-begin', data);
-        socket.emit('new-data', data);
+        io.socket.semit('new-data', data);
     });
 
     socket.on('batch-end', (data) => {
-        console.log('yo')
-        // console.log('batch-end', data);
-        socket.emit('new-data', 'WHAT');
-        socket.emit('new-data', data);
+        console.log('yo');
+        io.sockets.emit('new-data', Date.now());
     });
 
     socket.on('epoch-end', (data) => {
         console.log('epoch-end', data);
-        socket.emit('new-data', data);
+        io.sockets.emit('new-data', data);
     });
 
     socket.on('disconnect', () => {
@@ -29,4 +27,4 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(3000);
+server.listen(4000);

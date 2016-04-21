@@ -52,7 +52,6 @@ class HeraCallback(Callback):
             to_json({
                 'model': self.model_config,
                 'logs':to_json(logs),
-                'outputs': get_model_outputs_map(self.model)
             })
         )
 
@@ -61,7 +60,8 @@ class HeraCallback(Callback):
             'epoch-end',
             to_json({
                 'model': self.model_config,
-                'logs':to_json(logs)
+                'logs':to_json(logs),
+                'outputs': get_model_outputs_map(self.model)
             })
         )
 

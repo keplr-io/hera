@@ -77,3 +77,5 @@ if (__DEV__ && module.hot) {
 // Go!
 // ========================================================
 render()
+
+export default store;
