@@ -41,8 +41,8 @@ class HeraCallback(Callback):
         self.socket_connection.emit(
             'train-begin',
             {
-                'model': to_json(self.model_config),
-                'kerasConfig': to_json(self.model.to_json()),
+                'model': json.loads(to_json(self.model_config)),
+                'kerasConfig': json.loads(to_json(self.model.to_json())),
             }
         )
 
@@ -51,7 +51,7 @@ class HeraCallback(Callback):
             'batch-end',
             to_json({
                 'model': self.model_config,
-                'logs':to_json(logs),
+                'logs': json.loads(to_json(logs))
             })
         )
 
@@ -60,7 +60,7 @@ class HeraCallback(Callback):
             'epoch-end',
             to_json({
                 'model': self.model_config,
-                'logs':to_json(logs),
+                'logs': json.loads(to_json(logs)),
                 'outputs': get_model_outputs_map(self.model)
             })
         )
@@ -85,6 +85,4 @@ def get_model_outputs_map(model):
     )
 
 def get_layer_outputs(model, layer):
-    return K.batch_get_value(
-        layer.trainable_weights + layer.non_trainable_weights
-    )
+    return layer.get_weights()
