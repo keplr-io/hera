@@ -8,18 +8,19 @@ io.on('connection', (socket) => {
     console.log('a client connected');
 
     socket.on('train-begin', (data) => {
-        console.log('train-begin', data);
-        io.socket.semit('new-data', data);
+        io.sockets.emit('data-train-begin', data);
+    });
+
+    socket.on('epoch-begin', (data) => {
+        io.sockets.emit('data-epoch-begin', data);
     });
 
     socket.on('batch-end', (data) => {
-        console.log('yo');
-        io.sockets.emit('new-data', Date.now());
+        io.sockets.emit('data-batch-end', Date.now());
     });
 
     socket.on('epoch-end', (data) => {
-        console.log('epoch-end', data);
-        io.sockets.emit('new-data', data);
+        io.sockets.emit('data-epoch-end', data);
     });
 
     socket.on('disconnect', () => {

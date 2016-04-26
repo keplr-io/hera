@@ -42,6 +42,17 @@ class HeraCallback(Callback):
             'train-begin',
             {
                 'model': json.loads(to_json(self.model_config)),
+                'trainConfig': self.params,
+                'kerasConfig': json.loads(to_json(self.model.to_json())),
+            }
+        )
+
+
+    def on_epoch_begin(self, batch, logs={}):
+        self.socket_connection.emit(
+            'epoch-begin',
+            {
+                'model': json.loads(to_json(self.model_config)),
                 'kerasConfig': json.loads(to_json(self.model.to_json())),
             }
         )
