@@ -43,7 +43,7 @@ class HeraCallback(Callback):
             {
                 'model': json.loads(to_json(self.model_config)),
                 'trainConfig': self.params,
-                'kerasConfig': json.loads(to_json(self.model.to_json())),
+                'kerasConfig': json.loads(self.model.to_json()),
             }
         )
 

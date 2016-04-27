@@ -8,43 +8,22 @@ const defaultState = {
  *  Actions
  */
 
-export function updateData (newData) {
+export function updateData (updateQuery) {
     return {
         type: 'updateData',
-        data: newData
+        updateQuery: updateQuery
     };
 }
-
-export const updateDataAsync = (newData) => {
-    return (dispatch) => dispatch({
-        type: 'updateData',
-        data: newData
-    });
-};
 
 /**
  * Reducers
  */
 
 const ActionHandlers = {
-    updateData: (state, action) => getUpdatedDataState(
-        state, action.data
-    )
+    updateData: (state, action) => Update(state, action.updateQuery)
 };
 
 export default function dataReducer (state = defaultState, action) {
     return ActionHandlers[action.type]
         ? ActionHandlers[action.type](state, action) : state;
-}
-
-/**
- * Utilities
- */
-
-function getUpdatedDataState (state, newData) {
-    return Update(state, {
-        data: {
-            $set: newData
-        }
-    });
 }

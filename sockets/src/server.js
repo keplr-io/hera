@@ -16,11 +16,15 @@ io.on('connection', (socket) => {
     });
 
     socket.on('batch-end', (data) => {
-        io.sockets.emit('data-batch-end', Date.now());
+        io.sockets.emit('data-batch-end', data);
     });
 
     socket.on('epoch-end', (data) => {
         io.sockets.emit('data-epoch-end', data);
+    });
+
+    socket.on('train-end', (data) => {
+        io.sockets.emit('data-train-end', data);
     });
 
     socket.on('disconnect', () => {
