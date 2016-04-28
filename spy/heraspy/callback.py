@@ -47,6 +47,13 @@ class HeraCallback(Callback):
             }
         )
 
+    def on_train_end(self, logs={}):
+        self.socket_connection.emit(
+            'train-end',
+            {
+                'model': json.loads(to_json(self.model_config)),
+            }
+        )
 
     def on_epoch_begin(self, batch, logs={}):
         self.socket_connection.emit(

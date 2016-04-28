@@ -1,8 +1,6 @@
 import Update from 'react-addons-update';
 
-const defaultState = {
-    data: {}
-};
+const defaultState = {};
 
 /**
  *  Actions
