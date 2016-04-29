@@ -67,20 +67,20 @@ class HeraCallback(Callback):
     def on_batch_end(self, batch, logs={}):
         self.socket_connection.emit(
             'batch-end',
-            to_json({
-                'model': self.model_config,
+            {
+                'model': json.loads(to_json(self.model_config)),
                 'logs': json.loads(to_json(logs))
-            })
+            }
         )
 
     def on_epoch_end(self, batch, logs={}):
         self.socket_connection.emit(
             'epoch-end',
-            to_json({
-                'model': self.model_config,
+            {
+                'model': json.loads(to_json(self.model_config)),
                 'logs': json.loads(to_json(logs)),
-                'outputs': get_model_outputs_map(self.model)
-            })
+                'outputs': json.loads(to_json(get_model_outputs_map(self.model)))
+            }
         )
 
 

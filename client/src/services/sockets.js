@@ -1,6 +1,13 @@
+import Update from 'react-addons-update';
 import io from 'socket.io-client';
 import {updateData} from 'routes/DataView/modules/data';
 import URLs from 'constants/urls';
+
+const defaultModelFieldsUpdater = {
+    logs: {
+        $set: []
+    }
+};
 
 export function connectToSocket(store) {
     let socket = io.connect(URLs.sockets);
@@ -9,7 +16,10 @@ export function connectToSocket(store) {
         store.dispatch(
             updateData({
                 [data.model.id]: {
-                    $set: data
+                    $set: Update(
+                        data,
+                        defaultModelFieldsUpdater
+                    )
                 }
             }
         ));
@@ -20,6 +30,18 @@ export function connectToSocket(store) {
             updateData({
                 [data.model.id]: {
                     $set: null
+                }
+            }
+        ));
+    });
+
+    socket.on('data-batch-end', function (data) {
+        store.dispatch(
+            updateData({
+                [data.model.id]: {
+                    logs: {
+                        $push: [data.logs]
+                    }
                 }
             }
         ));
