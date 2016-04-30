@@ -20,6 +20,8 @@ def get_json_type(obj):
 def to_json(config):
     return json.dumps(config, default=get_json_type)
 
+def to_jsonable_dict(obj):
+    return json.loads(to_json(obj))
 
 class HeraCallback(Callback):
     '''
@@ -41,7 +43,7 @@ class HeraCallback(Callback):
         self.socket_connection.emit(
             'train-begin',
             {
-                'model': json.loads(to_json(self.model_config)),
+                'model': to_jsonable_dict(self.model_config),
                 'trainConfig': self.params,
                 'kerasConfig': json.loads(self.model.to_json()),
             }
@@ -51,7 +53,7 @@ class HeraCallback(Callback):
         self.socket_connection.emit(
             'train-end',
             {
-                'model': json.loads(to_json(self.model_config)),
+                'model': to_jsonable_dict(self.model_config),
             }
         )
 
@@ -59,8 +61,8 @@ class HeraCallback(Callback):
         self.socket_connection.emit(
             'epoch-begin',
             {
-                'model': json.loads(to_json(self.model_config)),
-                'kerasConfig': json.loads(to_json(self.model.to_json())),
+                'model': to_jsonable_dict(self.model_config),
+                'kerasConfig': to_jsonable_dict(self.model.to_json()),
             }
         )
 
@@ -68,8 +70,8 @@ class HeraCallback(Callback):
         self.socket_connection.emit(
             'batch-end',
             {
-                'model': json.loads(to_json(self.model_config)),
-                'logs': json.loads(to_json(logs))
+                'model': to_jsonable_dict(self.model_config),
+                'logs': to_jsonable_dict(logs)
             }
         )
 
@@ -77,9 +79,9 @@ class HeraCallback(Callback):
         self.socket_connection.emit(
             'epoch-end',
             {
-                'model': json.loads(to_json(self.model_config)),
-                'logs': json.loads(to_json(logs)),
-                'outputs': json.loads(to_json(get_model_outputs_map(self.model)))
+                'model': to_jsonable_dict(self.model_config),
+                'logs': to_jsonable_dict(logs),
+                'outputs': to_jsonable_dict(get_model_outputs_map(self.model))
             }
         )
 

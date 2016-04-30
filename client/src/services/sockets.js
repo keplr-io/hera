@@ -6,6 +6,9 @@ import URLs from 'constants/urls';
 const defaultModelFieldsUpdater = {
     logs: {
         $set: []
+    },
+    outputs: {
+        $set: []
     }
 };
 
@@ -41,6 +44,18 @@ export function connectToSocket(store) {
                 [data.model.id]: {
                     logs: {
                         $push: [data.logs]
+                    }
+                }
+            }
+        ));
+    });
+
+    socket.on('data-epoch-end', function (data) {
+        store.dispatch(
+            updateData({
+                [data.model.id]: {
+                    outputs: {
+                        $push: [data.outputs]
                     }
                 }
             }
