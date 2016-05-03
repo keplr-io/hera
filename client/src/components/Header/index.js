@@ -1,3 +1,9 @@
-import Header from './Header'
+import React from 'react';
 
-export default Header
+export const Header = () => (
+    <div>
+        <h1>Hera</h1>
+    </div>
+);
+
+export default Header;

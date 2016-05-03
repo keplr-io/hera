@@ -50,17 +50,17 @@ export function connectToSocket(store) {
         ));
     });
 
-    socket.on('data-epoch-end', function (data) {
-        store.dispatch(
-            updateData({
-                [data.model.id]: {
-                    outputs: {
-                        $push: [data.outputs]
-                    }
-                }
-            }
-        ));
-    });
+    // socket.on('data-epoch-end', function (data) {
+    //     store.dispatch(
+    //         updateData({
+    //             [data.model.id]: {
+    //                 outputs: {
+    //                     $push: [data.outputs]
+    //                 }
+    //             }
+    //         }
+    //     ));
+    // });
 
     return socket;
 }

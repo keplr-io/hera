@@ -1,7 +1,6 @@
 import { injectReducer } from '../../store/reducers';
 
 export default (store) => ({
-    path: 'view',
     getComponent (nextState, cb) {
         /*  Webpack - use 'require.ensure' to create a split point
           and embed an async module loader (jsonp) when bundling   */

@@ -2,9 +2,6 @@ import React from 'react';
 
 export const DataView = (props) => (
     <div>
-        <h2>
-            Data
-        </h2>
         <div>
             <pre>
                 {

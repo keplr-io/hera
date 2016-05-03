@@ -19,9 +19,9 @@ io.on('connection', (socket) => {
         io.sockets.emit('data-batch-end', data);
     });
 
-    // socket.on('epoch-end', (data) => {
-    //     io.sockets.emit('data-epoch-end', data);
-    // });
+    socket.on('epoch-end', (data) => {
+        io.sockets.emit('data-epoch-end', data);
+    });
 
     socket.on('train-end', (data) => {
         io.sockets.emit('data-train-end', data);
