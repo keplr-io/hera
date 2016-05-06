@@ -2,13 +2,33 @@ import React from 'react';
 
 export const DataView = (props) => (
     <div>
-        <div>
-            <pre>
-                {
-                    JSON.stringify(props.data, null, 4)
-                }
-            </pre>
-        </div>
+        {
+            Object.keys(props.data).map((modelId, idx) => {
+                const model = props.data[modelId];
+                if (model) {
+                    return <div key={'model-' + idx}>
+                        <div>Model: {model.model.id}</div>
+                        <div>
+                            Training Config
+                            <pre>
+                                {
+                                    JSON.stringify(model.trainConfig, null, 4)
+                                }
+                            </pre>
+                        </div>
+                        <div>
+                            Logs ({model.logs.length})
+                            <pre>
+                                {
+                                    JSON.stringify(model.logs, null, 4)
+                                }
+                            </pre>
+                        </div>
+
+                    </div>;
+                };
+            })
+        }
     </div>
 );
 
