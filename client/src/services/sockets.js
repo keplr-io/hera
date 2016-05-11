@@ -9,7 +9,7 @@ const defaultModelFieldsUpdater = {
     },
     metricTimeseries: {
         $set: {
-            loss: [[0, 0, 0]],
+            loss: [],
             acc: []
         }
     },
@@ -54,7 +54,7 @@ export function connectToSocket(store) {
                     metricTimeseries: {
                         loss: {
                             $push: [
-                                [data.logs.batch, data.logs.loss, data.logs.acc]
+                                [data.logs.batch, data.logs.loss]
                             ]
                         },
                         acc: {
