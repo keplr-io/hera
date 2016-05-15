@@ -5,10 +5,9 @@ import Model from 'components/Model';
 export const DataView = (props) => (
     <div>
         {
-            Object.keys(props.data).map((modelId, idx) => {
-                const model = props.data[modelId];
-                <Model model={model} key={'model-' + idx} />;
-            })
+            Object.keys(props.data).map((modelId, idx) => (
+                <Model model={props.data[modelId]} metrics={['loss', 'acc']} key={'model-' + idx} />
+            ))
         }
     </div>
 );
