@@ -6,7 +6,10 @@ export const DataView = (props) => (
     <div>
         {
             Object.keys(props.data).map((modelId, idx) => (
-                <Model model={props.data[modelId]} metrics={['loss', 'acc']} key={'model-' + idx} />
+                <Model model={props.data[modelId]}
+                  metrics={props.data.metrics}
+                  key={'model-' + idx}
+                />
             ))
         }
     </div>

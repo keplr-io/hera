@@ -3,15 +3,20 @@ import io from 'socket.io-client';
 import {updateData} from 'routes/DataView/modules/data';
 import URLs from 'constants/urls';
 
+const metricsToMonitor = ['loss', 'acc'];
+
 const defaultModelFieldsUpdater = {
+    metrics: {
+        $set: metricsToMonitor
+    },
     logs: {
         $set: []
     },
     metricTimeseries: {
-        $set: {
-            loss: [],
-            acc: []
-        }
+        $set: metricsToMonitor.reduce((map, metricName) => {
+            map[metricName] = [];
+            return map;
+        }, {})
     },
     outputs: {
         $set: []
@@ -51,18 +56,14 @@ export function connectToSocket(store) {
                     logs: {
                         $push: [data.logs]
                     },
-                    metricTimeseries: {
-                        loss: {
+                    metricTimeseries: metricsToMonitor.reduce((map, metricName) => {
+                        map[metricName] = {
                             $push: [
-                                [data.logs.batch, data.logs.loss]
+                                [data.logs.batch, data.logs[metricName]]
                             ]
-                        },
-                        acc: {
-                            $push: [
-                                [data.logs.batch, data.logs.acc]
-                            ]
-                        }
-                    }
+                        };
+                        return map;
+                    }, {})
                 }
             }
         ));
