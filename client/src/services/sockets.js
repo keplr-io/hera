@@ -2,13 +2,9 @@ import Update from 'react-addons-update';
 import io from 'socket.io-client';
 import {updateData} from 'routes/DataView/modules/data';
 import URLs from 'constants/urls';
-
-const metricsToMonitor = ['loss', 'acc'];
+import metricsToMonitor from 'constants/metrics';
 
 const defaultModelFieldsUpdater = {
-    metrics: {
-        $set: metricsToMonitor
-    },
     logs: {
         $set: []
     },
