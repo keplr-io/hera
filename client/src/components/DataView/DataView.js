@@ -7,7 +7,7 @@ export const DataView = (props) => (
     <div>
         {
             Object.keys(props.data).map((modelId, idx) => (
-                <Model model={props.data[modelId]}
+                props.data[modelId] && <Model model={props.data[modelId]}
                   metrics={metricsToMonitor}
                   key={'model-' + idx}
                 />

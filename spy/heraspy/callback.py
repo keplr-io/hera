@@ -1,6 +1,7 @@
 from keras.callbacks import Callback
 import json
 import numpy as np
+import requests
 
 def get_json_type(obj):
 
@@ -32,11 +33,14 @@ class HeraCallback(Callback):
             self,
             model_config,
             socket_connection,
+            server_config,
             callbacks=[],
             queue_length=10
         ):
         self.model_config = model_config
         self.socket_connection = socket_connection
+        self.server_address = 'http://' + server_config['domain'] + ':' +  str(server_config['port'])
+
         super(HeraCallback, self).__init__()
 
     def on_train_begin(self, logs={}):
@@ -76,15 +80,14 @@ class HeraCallback(Callback):
         )
 
     def on_epoch_end(self, batch, logs={}):
-        self.socket_connection.emit(
-            'epoch-end',
-            {
+        requests.post(
+            self.server_address + '/data',
+            data={
                 'model': to_jsonable_dict(self.model_config),
                 'logs': to_jsonable_dict(logs),
                 'outputs': to_jsonable_dict(get_model_outputs_map(self.model))
             }
         )
-
 
 from keras import backend as K
 
@@ -92,10 +95,7 @@ def get_model_outputs_map(model):
 
     def add_layer_outputs_to_map(current_map, layer):
 
-        current_map[layer.name] = get_layer_outputs(
-            model,
-            layer
-        )
+        current_map[layer.name] = layer.get_weights()
         return current_map
 
     return reduce(
@@ -103,6 +103,3 @@ def get_model_outputs_map(model):
         model.layers,
         {}
     )
-
-def get_layer_outputs(model, layer):
-    return layer.get_weights()

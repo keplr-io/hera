@@ -34,4 +34,8 @@ io.on('connection', (socket) => {
     });
 });
 
+app.post('/data', (req, res) => {
+    console.log('req.data', req.data);
+});
+
 server.listen(4000);

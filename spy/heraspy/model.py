@@ -16,5 +16,6 @@ class HeraModel(object):
                 socket_config['domain'],
                 socket_config['port'],
                 LoggingNamespace
-            )
+            ),
+            socket_config
         )
