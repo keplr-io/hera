@@ -1,10 +1,16 @@
 import socketIO from 'socket.io';
 import express from 'express';
 import http from 'http';
+import bodyParser from 'body-parser';
 
 const app = express();
+app.use(bodyParser.json({limit: '50mb'}));
 const server = http.Server(app);
 const io = socketIO(server);
+
+app.post('/data', (req, res) => {
+    res.send();
+});
 
 io.on('connection', (socket) => {
     console.log('a client connected');
@@ -32,10 +38,6 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('a client disconnected');
     });
-});
-
-app.post('/data', (req, res) => {
-    console.log('req.data', req.data);
 });
 
 server.listen(4000);

@@ -82,7 +82,7 @@ class HeraCallback(Callback):
     def on_epoch_end(self, batch, logs={}):
         requests.post(
             self.server_address + '/data',
-            data={
+            json={
                 'model': to_jsonable_dict(self.model_config),
                 'logs': to_jsonable_dict(logs),
                 'outputs': to_jsonable_dict(get_model_outputs_map(self.model))
