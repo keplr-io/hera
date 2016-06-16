@@ -1,8 +1,8 @@
 import React from 'react';
 
 export const Header = () => (
-    <div>
-        <h1>Hera</h1>
+    <div className='page-heading'>
+        <div><span className='brand-label'>Hera</span> Models currently sending data to Hera</div>
     </div>
 );
 

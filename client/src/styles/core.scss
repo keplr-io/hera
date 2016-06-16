@@ -19,4 +19,36 @@
   *:after {
     box-sizing: inherit;
   }
+
+  .model-name {
+      font-size: 1.5em;
+  }
+
+  .model-container {
+    padding: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .config-display {
+    padding: 20px;
+      pre {
+        max-height: 400px;
+    }
+  }
+
+  .panel-label {
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.5);
+    margin: 20px 0;
+  }
+
+  .page-heading {
+    padding: 20px;
+
+    .brand-label {
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+  }
+
 }

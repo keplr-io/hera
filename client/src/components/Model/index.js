@@ -20,7 +20,6 @@ export default class Model extends React.Component {
                 this.props.model.metricTimeseries[metricName],
                 {
                     drawPoints: true,
-                    showRoller: true,
                     valueRange: [0, 5],
                     labels: ['batch', metricName]
                 }
@@ -32,25 +31,44 @@ export default class Model extends React.Component {
     render() {
         const model = this.props.model;
         this.updateGraph(model);
-        return <div ref='container'>
-            <div>Model: {model.model.id}</div>
-            {
-                this.props.metrics.map((metricName) => (
-                    <div className={'graph-' + metricName + '-container'} key={metricName}>
-                        <div>{metricName}</div>
-                        <div className={'graph-' + metricName}></div>
+        return <div className='model-container' ref='container'>
+            <div className='model-name'>Model: <b>{model.model.id}</b></div>
+            <div className='row'>
+                {
+                    this.props.metrics.map((metricName) => (
+                        <div className={'graph-' + metricName + '-container graph-container col-sm-5'} key={metricName}>
+                            <div className='graph-title panel-label'>{metricName}</div>
+                            <div className={'graph-' + metricName}></div>
+                        </div>
+                    ))
+                }
+                <div className='config-display col-md-5'>
+                    <div className='panel-label'>
+                        Training Config
                     </div>
-                ))
-            }
-            <div>
-                Training Config
-                <code>
-                    <pre>
-                        {
-                            JSON.stringify(model.trainConfig, null, 4)
-                        }
-                    </pre>
-                </code>
+
+                    <div>
+                        <pre>
+                            {
+                                JSON.stringify(model.trainConfig, null, 4)
+                            }
+                        </pre>
+                    </div>
+                </div>
+                <div className='config-display col-md-5'>
+                    <div className='panel-label'>
+                        Keras Config
+                    </div>
+
+                    <div>
+                        <pre>
+                            {
+                                JSON.stringify(model.kerasConfig, null, 4)
+                            }
+                        </pre>
+                    </div>
+                </div>
+
             </div>
         </div>;
     }

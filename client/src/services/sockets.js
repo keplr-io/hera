@@ -36,6 +36,7 @@ export function connectToSocket(store) {
     });
 
     socket.on('data-train-end', function (data) {
+        /**
         store.dispatch(
             updateData({
                 [data.model.id]: {
@@ -43,6 +44,7 @@ export function connectToSocket(store) {
                 }
             }
         ));
+        **/
     });
 
     socket.on('data-batch-end', function (data) {
