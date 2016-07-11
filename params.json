@@ -1,0 +1,6 @@
+{
+  "name": "Hera",
+  "tagline": "Train/evaluate a Keras model, get metrics streamed to a dashboard in your browser.",
+  "body": "Train/evaluate a Keras model, get metrics streamed to a dashboard in your browser.\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
