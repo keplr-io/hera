@@ -1,10 +1,5 @@
 #Hera
 
-Monitor your Keras models in realtime.
-
-
-## TL;DR
-
 Train/evaluate a Keras model, get metrics streamed to a dashboard in your browser.
 
 ## Setting up
@@ -27,10 +22,10 @@ Train/evaluate a Keras model, get metrics streamed to a dashboard in your browse
 
     hera_model = HeraModel(
         {
-            'id': 'my-model' // any ID you want to use to identify your model
+            'id': 'my-model' # any ID you want to use to identify your model
         },
         {
-            // location of the local hera server, out of the box it's the following
+            # location of the local hera server, out of the box it's the following
             'domain': 'localhost',
             'port': 4000
         }
@@ -72,5 +67,6 @@ Git clone this repository, then run
 
 ## Credits
 
-- [React-Redux starter kit](https://github.com/davezuko/react-redux-starter-kit)
-- [React timeline charts](https://github.com/esnet/react-timeseries-charts)
+Aside from the obvious ones:
+
+- The dashboard is built on [React-Redux starter kit](https://github.com/davezuko/react-redux-starter-kit)
