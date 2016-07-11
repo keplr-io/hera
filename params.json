@@ -1,6 +1,6 @@
 {
   "name": "Hera",
   "tagline": "Train/evaluate a Keras model, get metrics streamed to a dashboard in your browser.",
-  "body": "Train/evaluate a Keras model, get metrics streamed to a dashboard in your browser.\r\n",
+  "body": "Train/evaluate a Keras model, get metrics streamed to a dashboard in your browser.\r\n\r\n![out-6](https://cloud.githubusercontent.com/assets/5866348/16719660/13460bee-46e2-11e6-8ab1-56873807390d.gif)\r\n\r\n",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
