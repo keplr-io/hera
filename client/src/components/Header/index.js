@@ -2,7 +2,7 @@ import React from 'react';
 
 export const Header = () => (
     <div className='page-heading'>
-        <div><span className='brand-label'>Hera</span> Models currently sending data to Hera</div>
+        <div><span className='brand-label'>Hera</span></div>
     </div>
 );
 

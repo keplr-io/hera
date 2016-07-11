@@ -1,7 +1,14 @@
 #Hera
 
+Monitor your Keras models in realtime.
 
-TODO: add desc
+
+## TL;DR
+
+Train/evaluate a Keras model, get metrics streamed to a dashboard in your browser.
+
+
+
 
 ## Credits
 

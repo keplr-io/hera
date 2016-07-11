@@ -36,13 +36,13 @@ export default class Model extends React.Component {
             <div className='row'>
                 {
                     this.props.metrics.map((metricName) => (
-                        <div className={'graph-' + metricName + '-container graph-container col-sm-5'} key={metricName}>
+                        <div className={'graph-' + metricName + '-container graph-container col-md-6'} key={metricName}>
                             <div className='graph-title panel-label'>{metricName}</div>
                             <div className={'graph-' + metricName}></div>
                         </div>
                     ))
                 }
-                <div className='config-display col-md-5'>
+                <div className='config-display col-md-6'>
                     <div className='panel-label'>
                         Training Config
                     </div>
@@ -55,7 +55,7 @@ export default class Model extends React.Component {
                         </pre>
                     </div>
                 </div>
-                <div className='config-display col-md-5'>
+                <div className='config-display col-md-6'>
                     <div className='panel-label'>
                         Keras Config
                     </div>
