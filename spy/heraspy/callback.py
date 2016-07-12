@@ -2,6 +2,7 @@ from keras.callbacks import Callback
 import json
 import numpy as np
 import requests
+from functools import reduce
 
 def get_json_type(obj):
 
