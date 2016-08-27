@@ -53,6 +53,7 @@ Git clone this repository, then run
 
     cd server
     npm install
+    gulp # optional, for now the build file is kept track in git
     node build/server
 ```
 
