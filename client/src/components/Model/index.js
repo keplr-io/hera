@@ -8,6 +8,8 @@ import cydagre from 'cytoscape-dagre';
 import dagre from 'dagre';
 import { computeCytoscapeGraph } from 'components/Model/util';
 import { updateSelectedNode } from 'routes/DataView/modules/selected-node';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { github } from 'react-syntax-highlighter/dist/styles';
 
 export class Model extends React.Component {
     static propTypes = {
@@ -79,16 +81,15 @@ export class Model extends React.Component {
             <div className='model-name'>Model: <b>{model.model.id}</b></div>
             <div className='row'>
                 <div ref='graphvisContainer' className='graph-vis-container'></div>
+                {
+                    this.props.selectedNode.data ?
+                    <div>
+                        <div className='panel-label'>Selected: {this.props.selectedNode.id} </div>
+                        <SyntaxHighlighter language='json' style={github}>{JSON.stringify(this.props.selectedNode.data, null, 4)}</SyntaxHighlighter>
+                    </div>: ''
+                }
+
             </div>
-            {
-                this.props.selectedNode.data ?
-                <div>
-                    <div>Selected: {this.props.selectedNode.id} </div>
-                    <pre>
-                        {JSON.stringify(this.props.selectedNode.data, null, 4)}
-                    </pre>
-                </div>: ''
-            }
             <div className='row'>
                 {
                     this.props.metrics.map((metricName) => (
@@ -104,11 +105,11 @@ export class Model extends React.Component {
                     </div>
 
                     <div>
-                        <pre>
+                        <SyntaxHighlighter language='json' style={github}>
                             {
                                 JSON.stringify(model.trainConfig, null, 4)
                             }
-                        </pre>
+                        </SyntaxHighlighter>
                     </div>
                 </div>
                 <div className='config-display col-md-6'>
@@ -117,11 +118,11 @@ export class Model extends React.Component {
                     </div>
 
                     <div>
-                        <pre>
+                         <SyntaxHighlighter language='json' style={github}>
                             {
                                 JSON.stringify(model.kerasConfig, null, 4)
                             }
-                        </pre>
+                         </SyntaxHighlighter>
                     </div>
                 </div>
             </div>
