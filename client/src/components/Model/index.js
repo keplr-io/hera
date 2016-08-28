@@ -2,6 +2,8 @@ import React from 'react';
 import $ from 'jquery';
 import Dygraph from 'dygraphs';
 import cytoscape from 'cytoscape';
+import cydagre from 'cytoscape-dagre';
+import dagre from 'dagre';
 import { computeCytoscapeGraph } from 'components/Model/util';
 
 export default class Model extends React.Component {
@@ -29,9 +31,34 @@ export default class Model extends React.Component {
             return graphsMap;
         }, {});
 
+        cydagre( cytoscape, dagre );
+
         cytoscape({
             container: this.refs.graphvisContainer,
-            elements: computeCytoscapeGraph(this.props.model.kerasConfig)
+            elements: computeCytoscapeGraph(this.props.model.kerasConfig),
+            layout: {
+              name: 'dagre'
+            },
+            style: [
+            {
+                selector: 'node',
+                style: {
+                    'content': 'data(id)',
+                    'text-opacity': 0.5,
+                    'text-valign': 'center',
+                    'text-halign': 'right',
+                    'text-margin-x': 10,
+                }
+            },
+            {
+                selector: 'edge',
+                style: {
+                    'width': 4,
+                    'target-arrow-shape': 'triangle',
+                    'curve-style': 'bezier'
+                }
+            }
+            ]
         });
     }
 
