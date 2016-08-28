@@ -1,6 +1,8 @@
 import React from 'react';
 import $ from 'jquery';
 import Dygraph from 'dygraphs';
+import cytoscape from 'cytoscape';
+import { computeCytoscapeGraph } from 'components/Model/util';
 
 export default class Model extends React.Component {
     static propTypes = {
@@ -26,6 +28,11 @@ export default class Model extends React.Component {
             );
             return graphsMap;
         }, {});
+
+        cytoscape({
+            container: this.refs.graphvisContainer,
+            elements: computeCytoscapeGraph(this.props.model.kerasConfig)
+        });
     }
 
     render() {
@@ -33,6 +40,9 @@ export default class Model extends React.Component {
         this.updateGraph(model);
         return <div className='model-container' ref='container'>
             <div className='model-name'>Model: <b>{model.model.id}</b></div>
+            <div className='row'>
+                <div ref='graphvisContainer' className='graph-vis-container'></div>
+            </div>
             <div className='row'>
                 {
                     this.props.metrics.map((metricName) => (
@@ -68,7 +78,6 @@ export default class Model extends React.Component {
                         </pre>
                     </div>
                 </div>
-
             </div>
         </div>;
     }
@@ -76,7 +85,9 @@ export default class Model extends React.Component {
     updateGraph(model) {
         return this.props.metrics.map((metricName) => (
             this.graphs[metricName] &&
-            this.graphs[metricName].updateOptions({ 'file': model.metricTimeseries[metricName] })
+            this.graphs[metricName].updateOptions({
+                file: model.metricTimeseries[metricName]
+            })
         ));
     }
 }
