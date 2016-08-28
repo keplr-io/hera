@@ -1,4 +1,11 @@
 export function computeCytoscapeGraph(kerasGraph) {
+    return kerasGraph.class_name === 'Model' ?
+        getModelCytoscapeGraph(kerasGraph) :
+        getSequentialCytoscapeGraph(kerasGraph)
+}
+
+
+export function getModelCytoscapeGraph(kerasGraph) {
     return [].concat(
         /**
          * Nodes
@@ -29,4 +36,46 @@ export function computeCytoscapeGraph(kerasGraph) {
             )
         ), [])
     )
+}
+
+export function getSequentialCytoscapeGraph(kerasGraph) {
+    console.log(kerasGraph)
+    return [].concat(
+        /**
+         * Nodes
+         */
+        kerasGraph.config.map(
+            (layer) => ({
+                data: {
+                    id: layer.config.name,
+                    data: layer
+                }
+            })
+        )
+    ).concat(
+        /**
+         * Links
+         */
+        kerasGraph.config.reduce((linksData, layer) => (
+            {
+                links: linksData.links.concat(
+                    linksData.lastNodeId ?
+                    [
+                        {
+                            data: {
+                                id: layer.config.name + '-' + linksData.lastNodeId,
+                                source: linksData.lastNodeId,
+                                target: layer.config.name
+                            }
+                        }
+                    ] : []
+                ),
+                lastNodeId: layer.config.name
+            }
+        ), {
+            links: [],
+            lastNodeId: ''
+        }).links
+    )
+
 }
