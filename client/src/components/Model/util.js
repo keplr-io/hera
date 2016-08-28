@@ -1,22 +1,41 @@
-export function computeCytoscapeGraph(kerasGraph) {
+export function computeCytoscapeGraph(kerasGraph, prefix) {
     return kerasGraph.class_name === 'Model' ?
-        getModelCytoscapeGraph(kerasGraph) :
-        getSequentialCytoscapeGraph(kerasGraph)
+        getModelCytoscapeGraph(kerasGraph, prefix) :
+        getSequentialCytoscapeGraph(kerasGraph, prefix)
 }
 
 
 export function getModelCytoscapeGraph(kerasGraph) {
+
+
+    /**
+     * Precompute this for performance
+     */
+    const subgraphMap = kerasGraph.config.layers.reduce(
+        (currentMap, layer) => Object.assign(
+            currentMap, {
+                [layer.name]: isNodeSubgraph(layer) ? layer : false
+            }
+        ), {}
+    );
+
     return [].concat(
         /**
          * Nodes
          */
-        kerasGraph.config.layers.map(
-            (layer) => ({
-                data: {
-                    id: layer.name,
-                    data: layer
-                }
-            })
+        kerasGraph.config.layers.reduce(
+            (nodes, layer) => (
+                subgraphMap[layer.name] ?
+                    nodes.concat(computeCytoscapeGraph(layer, layer.name)):
+                    nodes.concat([
+                        {
+                            data: {
+                                id: layer.name,
+                                data: layer
+                            }
+                        }
+                    ])
+            ), []
         )
     ).concat(
         /**
@@ -28,8 +47,8 @@ export function getModelCytoscapeGraph(kerasGraph) {
                     (inboundNode) => ({
                         data: {
                             id: layer.name + '-' + inboundNode[0][0],
-                            source: inboundNode[0][0],
-                            target: layer.name
+                            source: subgraphMap[inboundNode[0][0]] ? getSubgraphEnd(subgraphMap[inboundNode[0][0]]) : inboundNode[0][0],
+                            target: subgraphMap[layer.name] ? getSubgraphStart(subgraphMap[layer.name]) : layer.name
                         }
                     })
                 )
@@ -38,8 +57,8 @@ export function getModelCytoscapeGraph(kerasGraph) {
     )
 }
 
-export function getSequentialCytoscapeGraph(kerasGraph) {
-    console.log(kerasGraph)
+
+export function getSequentialCytoscapeGraph(kerasGraph, prefix = '') {
     return [].concat(
         /**
          * Nodes
@@ -47,7 +66,7 @@ export function getSequentialCytoscapeGraph(kerasGraph) {
         kerasGraph.config.map(
             (layer) => ({
                 data: {
-                    id: layer.config.name,
+                    id: prefix + '.' + layer.config.name,
                     data: layer
                 }
             })
@@ -63,14 +82,14 @@ export function getSequentialCytoscapeGraph(kerasGraph) {
                     [
                         {
                             data: {
-                                id: layer.config.name + '-' + linksData.lastNodeId,
+                                id: prefix + '.' + layer.config.name + '-' + linksData.lastNodeId,
                                 source: linksData.lastNodeId,
-                                target: layer.config.name
+                                target: prefix + '.' + layer.config.name
                             }
                         }
                     ] : []
                 ),
-                lastNodeId: layer.config.name
+                lastNodeId: prefix + '.' + layer.config.name
             }
         ), {
             links: [],
@@ -78,4 +97,16 @@ export function getSequentialCytoscapeGraph(kerasGraph) {
         }).links
     )
 
+}
+
+function getSubgraphStart(subgraph) {
+    return subgraph.class_name === 'Sequential' ? subgraph.name + '.' + subgraph.config[0].config.name : null;
+}
+
+function getSubgraphEnd(subgraph) {
+    return subgraph.class_name === 'Sequential' ? subgraph.name + '.' + subgraph.config[subgraph.config.length - 1].config.name : null;
+}
+
+function isNodeSubgraph(layer) {
+    return ['Sequential', 'Model'].indexOf(layer.class_name) !== -1;
 }
