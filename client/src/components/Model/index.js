@@ -1,8 +1,17 @@
 import React from 'react';
+import { connect } from 'react-redux'
+
 import $ from 'jquery';
 import Dygraph from 'dygraphs';
+import cytoscape from 'cytoscape';
+import cydagre from 'cytoscape-dagre';
+import dagre from 'dagre';
+import { computeCytoscapeGraph } from 'components/Model/util';
+import { updateSelectedNode } from 'routes/DataView/modules/selected-node';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { github } from 'react-syntax-highlighter/dist/styles';
 
-export default class Model extends React.Component {
+export class Model extends React.Component {
     static propTypes = {
         model: React.PropTypes.object.isRequired,
         metrics: React.PropTypes.array.isRequired
@@ -26,6 +35,43 @@ export default class Model extends React.Component {
             );
             return graphsMap;
         }, {});
+
+        cydagre( cytoscape, dagre );
+
+        let cyGraph = cytoscape({
+            container: this.refs.graphvisContainer,
+            elements: computeCytoscapeGraph(this.props.model.kerasConfig),
+            layout: {
+              name: 'dagre',
+              rankDir: 'LR'
+            },
+            style: [
+            {
+                selector: 'node',
+                style: {
+                    'content': 'data(id)',
+                    'text-opacity': 0.5,
+                    'text-valign': 'bottom',
+                    'text-halign': 'center',
+                    'text-margin-y': 15,
+                }
+            },
+            {
+                selector: 'edge',
+                style: {
+                    'width': 4,
+                    'target-arrow-shape': 'triangle',
+                    'curve-style': 'bezier'
+                }
+            }
+            ]
+        });
+        cyGraph.nodes()
+        .on('select', (clickEvt) =>
+            this.props.updateSelectedNode(clickEvt.cyTarget._private.data)
+        )
+        .on('unselect', (clickEvt) => this.props.updateSelectedNode({}))
+
     }
 
     render() {
@@ -33,6 +79,17 @@ export default class Model extends React.Component {
         this.updateGraph(model);
         return <div className='model-container' ref='container'>
             <div className='model-name'>Model: <b>{model.model.id}</b></div>
+            <div className='row'>
+                <div ref='graphvisContainer' className='graph-vis-container'></div>
+                {
+                    this.props.selectedNode.data ?
+                    <div>
+                        <div className='panel-label'>Selected: {this.props.selectedNode.id} </div>
+                        <SyntaxHighlighter language='json' style={github}>{JSON.stringify(this.props.selectedNode.data, null, 4)}</SyntaxHighlighter>
+                    </div>: ''
+                }
+
+            </div>
             <div className='row'>
                 {
                     this.props.metrics.map((metricName) => (
@@ -48,11 +105,11 @@ export default class Model extends React.Component {
                     </div>
 
                     <div>
-                        <pre>
+                        <SyntaxHighlighter language='json' style={github}>
                             {
                                 JSON.stringify(model.trainConfig, null, 4)
                             }
-                        </pre>
+                        </SyntaxHighlighter>
                     </div>
                 </div>
                 <div className='config-display col-md-6'>
@@ -61,14 +118,13 @@ export default class Model extends React.Component {
                     </div>
 
                     <div>
-                        <pre>
+                         <SyntaxHighlighter language='json' style={github}>
                             {
                                 JSON.stringify(model.kerasConfig, null, 4)
                             }
-                        </pre>
+                         </SyntaxHighlighter>
                     </div>
                 </div>
-
             </div>
         </div>;
     }
@@ -76,7 +132,15 @@ export default class Model extends React.Component {
     updateGraph(model) {
         return this.props.metrics.map((metricName) => (
             this.graphs[metricName] &&
-            this.graphs[metricName].updateOptions({ 'file': model.metricTimeseries[metricName] })
+            this.graphs[metricName].updateOptions({
+                file: model.metricTimeseries[metricName]
+            })
         ));
     }
 }
+
+export default connect((state) => ({
+    selectedNode: state.selectedNode
+}), {
+    updateSelectedNode: updateSelectedNode
+})(Model)
