@@ -1,12 +1,15 @@
 import React from 'react';
+import { connect } from 'react-redux'
+
 import $ from 'jquery';
 import Dygraph from 'dygraphs';
 import cytoscape from 'cytoscape';
 import cydagre from 'cytoscape-dagre';
 import dagre from 'dagre';
 import { computeCytoscapeGraph } from 'components/Model/util';
+import { updateSelectedNode } from 'routes/DataView/modules/selected-node';
 
-export default class Model extends React.Component {
+export class Model extends React.Component {
     static propTypes = {
         model: React.PropTypes.object.isRequired,
         metrics: React.PropTypes.array.isRequired
@@ -33,11 +36,12 @@ export default class Model extends React.Component {
 
         cydagre( cytoscape, dagre );
 
-        cytoscape({
+        let cyGraph = cytoscape({
             container: this.refs.graphvisContainer,
             elements: computeCytoscapeGraph(this.props.model.kerasConfig),
             layout: {
-              name: 'dagre'
+              name: 'dagre',
+              rankDir: 'LR'
             },
             style: [
             {
@@ -45,9 +49,9 @@ export default class Model extends React.Component {
                 style: {
                     'content': 'data(id)',
                     'text-opacity': 0.5,
-                    'text-valign': 'center',
-                    'text-halign': 'right',
-                    'text-margin-x': 10,
+                    'text-valign': 'bottom',
+                    'text-halign': 'center',
+                    'text-margin-y': 15,
                 }
             },
             {
@@ -60,6 +64,12 @@ export default class Model extends React.Component {
             }
             ]
         });
+        cyGraph.nodes()
+        .on('select', (clickEvt) =>
+            this.props.updateSelectedNode(clickEvt.cyTarget._private.data)
+        )
+        .on('unselect', (clickEvt) => this.props.updateSelectedNode({}))
+
     }
 
     render() {
@@ -70,6 +80,15 @@ export default class Model extends React.Component {
             <div className='row'>
                 <div ref='graphvisContainer' className='graph-vis-container'></div>
             </div>
+            {
+                this.props.selectedNode.data ?
+                <div>
+                    <div>Selected: {this.props.selectedNode.id} </div>
+                    <pre>
+                        {JSON.stringify(this.props.selectedNode.data, null, 4)}
+                    </pre>
+                </div>: ''
+            }
             <div className='row'>
                 {
                     this.props.metrics.map((metricName) => (
@@ -118,3 +137,9 @@ export default class Model extends React.Component {
         ));
     }
 }
+
+export default connect((state) => ({
+    selectedNode: state.selectedNode
+}), {
+    updateSelectedNode: updateSelectedNode
+})(Model)

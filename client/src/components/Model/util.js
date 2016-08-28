@@ -16,13 +16,17 @@ export function computeCytoscapeGraph(kerasGraph) {
          * Links
          */
         kerasGraph.config.layers.reduce((links, layer) => (
-            links.concat(layer.inbound_nodes.map((inboundNode) => ({
-                data: {
-                    id: layer.name + '-' + inboundNode[0][0],
-                    source: inboundNode[0][0],
-                    target: layer.name
-                }
-            })))
+            links.concat(
+                layer.inbound_nodes.map(
+                    (inboundNode) => ({
+                        data: {
+                            id: layer.name + '-' + inboundNode[0][0],
+                            source: inboundNode[0][0],
+                            target: layer.name
+                        }
+                    })
+                )
+            )
         ), [])
     )
 }
