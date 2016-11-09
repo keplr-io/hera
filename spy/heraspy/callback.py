@@ -3,7 +3,6 @@ import json
 import numpy as np
 import requests
 from functools import reduce
-from keras import backend as K
 
 def get_json_type(obj):
 
