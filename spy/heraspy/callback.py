@@ -3,6 +3,7 @@ import json
 import numpy as np
 import requests
 from functools import reduce
+from keras import backend as K
 
 def get_json_type(obj):
 
@@ -90,7 +91,6 @@ class HeraCallback(Callback):
             }
         )
 
-from keras import backend as K
 
 def get_model_outputs_map(model):
 
