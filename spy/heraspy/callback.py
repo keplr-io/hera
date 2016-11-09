@@ -90,7 +90,6 @@ class HeraCallback(Callback):
             }
         )
 
-from keras import backend as K
 
 def get_model_outputs_map(model):
 
