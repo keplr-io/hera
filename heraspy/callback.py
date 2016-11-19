@@ -2,7 +2,6 @@
     The Hera Callback
 '''
 
-
 from __future__ import absolute_import
 
 import json
@@ -18,28 +17,21 @@ from heraspy.events import (
 
 class HeraCallback(Callback):
 
-
     '''
         A Keras callback streaming data to a hera socket server
     '''
 
-    def __init__(
-            self,
-            namespace,
-            hera_config,
-            dispatch_message
-        ):
+    def __init__(self, namespace, dispatcher, hera_config=None):
 
-        self.dispatch_message = dispatch_message
+        self.dispatcher = dispatcher
         self.namespace = namespace
-        self.model_config = model_config
-        self.server_address = get_server_url(hera_config)
+        self.hera_config = hera_config
 
         super(HeraCallback, self).__init__()
 
     def on_train_begin(self, *args):
 
-        self.dispatch_message(
+        self.dispatcher(
             self.namespace,
             TRAIN_BEGIN,
             {
@@ -51,7 +43,7 @@ class HeraCallback(Callback):
 
     def on_train_end(self, *args):
 
-        self.dispatch_message(
+        self.dispatcher(
             self.namespace,
             TRAIN_END
         )
@@ -59,13 +51,13 @@ class HeraCallback(Callback):
 
     def on_epoch_begin(self, *args):
 
-        self.dispatch_message(
+        self.dispatcher(
             self.namespace,
             EPOCH_BEGIN
         )
 
     def on_epoch_end(self, *args):
-        self.dispatch_message(
+        self.dispatcher(
             self.namespace,
             EPOCH_END,
             {
@@ -74,7 +66,7 @@ class HeraCallback(Callback):
         )
 
     def on_batch_begin(self, *args):
-        self.dispatch_message(
+        self.dispatcher(
             self.namespace,
             BATCH_BEGIN,
             {
@@ -84,7 +76,7 @@ class HeraCallback(Callback):
 
 
     def on_batch_end(self, *args):
-        self.dispatch_message(
+        self.dispatcher(
             self.namespace,
             BATCH_END,
             {
