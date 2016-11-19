@@ -3,7 +3,6 @@
 '''
 
 from __future__ import absolute_import
-
 import json
 
 from keras.callbacks import Callback
@@ -12,7 +11,7 @@ from heraspy.util import to_jsonable_dict
 from heraspy.events import (
     TRAIN_BEGIN, TRAIN_END,
     EPOCH_BEGIN, EPOCH_END,
-    BATCH_BEGIN, BATCH_END
+    BATCH_END
 )
 
 class HeraCallback(Callback):
@@ -30,7 +29,6 @@ class HeraCallback(Callback):
         super(HeraCallback, self).__init__()
 
     def on_train_begin(self, *args):
-
         self.dispatcher(
             self.namespace,
             TRAIN_BEGIN,
@@ -45,7 +43,8 @@ class HeraCallback(Callback):
 
         self.dispatcher(
             self.namespace,
-            TRAIN_END
+            TRAIN_END,
+            None
         )
 
 
@@ -53,7 +52,8 @@ class HeraCallback(Callback):
 
         self.dispatcher(
             self.namespace,
-            EPOCH_BEGIN
+            EPOCH_BEGIN,
+            None
         )
 
     def on_epoch_end(self, *args):
@@ -65,21 +65,19 @@ class HeraCallback(Callback):
             }
         )
 
-    def on_batch_begin(self, *args):
-        self.dispatcher(
-            self.namespace,
-            BATCH_BEGIN,
-            {
-                'data': 1,
-            }
-        )
+    def on_batch_end(self, batch, logs):
 
-
-    def on_batch_end(self, *args):
         self.dispatcher(
             self.namespace,
             BATCH_END,
             {
-                'data': 1,
+                'batch': batch,
+                'metricData': to_jsonable_dict(
+                    dict([
+                        (metric, logs[metric])
+                        for metric in self.params['metrics']
+                        if metric in logs
+                    ])
+                ),
             }
         )

@@ -1,18 +1,13 @@
-from socketIO_client import SocketIO, LoggingNamespace
+from socketIO_client import SocketIO, BaseNamespace
 
-def get_socket_dispatcher(domain, port):
+def get_socket_dispatcher(namespace, domain, port):
 
-    socket_client = SocketIO(
-        domain,
-        port,
-        LoggingNamespace
-    )
+    nsp = SocketIO(domain, port)
 
     def dispatch(namespace, event, data):
-        return socket_client.emit(
+        return nsp.emit(
             event,
             data,
-            namespapce=namespace
         )
 
     return dispatch
