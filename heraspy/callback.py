@@ -56,13 +56,11 @@ class HeraCallback(Callback):
             None
         )
 
-    def on_epoch_end(self, *args):
+    def on_epoch_end(self, logs, *args):
         self.dispatcher(
             self.namespace,
             EPOCH_END,
-            {
-                'logs': to_jsonable_dict(logs),
-            }
+            None
         )
 
     def on_batch_end(self, batch, logs):

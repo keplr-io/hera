@@ -1,0 +1,28 @@
+.graph-vis-container {
+    min-height: 1000px;
+}
+
+.graph-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 40%;
+    height: 1000px;
+    background-color: #fff;
+    z-index: 99;
+}
+
+.experiment-container {
+    width: 60%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.01);
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    min-height: 100%;
+    padding: 30px;
+}
+
+.output-container {
+    text-align: center;
+}
