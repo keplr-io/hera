@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { addModel } from 'routes/home/state';
+import { addModel, startEpoch } from 'routes/home/state';
 
 export function connectToSocket(dispatch) {
 
@@ -15,11 +15,28 @@ export function connectToSocket(dispatch) {
     socket.on('TRAIN_BEGIN', body => {
 
         Object.assign(
-
             window.metricData,
+            { [body.model]: {} }
+        );
 
+        Object.assign(
+            window.metricGraphs,
+            { [body.model]: {} }
+        );
+
+        dispatch(addModel({
+            key: body.model,
+            epochs: [],
+            data: body.data
+        }));
+
+    });
+
+    socket.on('EPOCH_BEGIN', body => {
+        Object.assign(
+            window.metricData[body.model],
             {
-                [body.model]: body.data.trainConfig.metrics.reduce(
+                [body.data.epoch]: body.data.params.metrics.reduce(
                     (metricDataMap, metricKey) => Object.assign(
                         metricDataMap,
                         { [metricKey]: [[0, 0]] }
@@ -29,20 +46,15 @@ export function connectToSocket(dispatch) {
         );
 
         Object.assign(
-
-            window.metricGraphs,
-
+            window.metricGraphs[body.model],
             {
-                [body.model]: {}
+                [body.data.epoch]: {}
             }
-
         );
 
-        dispatch(addModel({
-            key: body.model,
-            data: body.data
-        }));
-
+        dispatch(
+            startEpoch(body.model, body.data.epoch)
+        );
     });
 
     socket.on('BATCH_END', body => {
@@ -50,6 +62,7 @@ export function connectToSocket(dispatch) {
         Object.keys(body.data.metricData).forEach(
             metricKey => updateLocalStateWithMetric(
                 body.model,
+                body.data.epoch,
                 metricKey,
                 body.data.batch,
                 body.data.metricData[metricKey]
@@ -61,13 +74,16 @@ export function connectToSocket(dispatch) {
     return socket;
 }
 
-function updateLocalStateWithMetric(modelKey, metricKey, batchIdx, metricVal) {
-    window.metricData[modelKey][metricKey].push([
+function updateLocalStateWithMetric(modelKey, epochIdx, metricKey, batchIdx, metricVal) {
+    const metricData = window.metricData[modelKey][epochIdx][metricKey];
+    metricData.push([
         batchIdx,
         metricVal
     ]);
 
-    window.metricGraphs[modelKey][metricKey].updateOptions({
-        file: window.metricData[modelKey][metricKey]
-    });
+    window.requestAnimationFrame(() =>
+        window.metricGraphs[modelKey][epochIdx][metricKey].updateOptions({
+            file: metricData
+        })
+    );
 }

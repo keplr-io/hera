@@ -25,6 +25,8 @@ class HeraCallback(Callback):
         self.dispatcher = dispatcher
         self.namespace = namespace
         self.hera_config = hera_config
+        self.current_epoch = 0
+        self.batch_idx = 0
 
         super(HeraCallback, self).__init__()
 
@@ -33,7 +35,7 @@ class HeraCallback(Callback):
             self.namespace,
             TRAIN_BEGIN,
             {
-                'trainConfig': self.params,
+                'params': self.params,
                 'modelJson': json.loads(self.model.to_json()),
             }
         )
@@ -48,28 +50,33 @@ class HeraCallback(Callback):
         )
 
 
-    def on_epoch_begin(self, *args):
-
+    def on_epoch_begin(self, epoch, *args):
+        self.current_epoch = epoch
         self.dispatcher(
             self.namespace,
             EPOCH_BEGIN,
-            None
+            {
+                'epoch': epoch,
+                'batchIdx': self.batch_idx,
+                'params': self.params
+            }
         )
 
-    def on_epoch_end(self, logs, *args):
+    def on_epoch_end(self, epoch, *args):
         self.dispatcher(
             self.namespace,
             EPOCH_END,
-            None
+            {'epoch': epoch}
         )
 
     def on_batch_end(self, batch, logs):
-
         self.dispatcher(
             self.namespace,
             BATCH_END,
             {
                 'batch': batch,
+                'epoch': self.current_epoch,
+                'idx': self.batch_idx,
                 'metricData': to_jsonable_dict(
                     dict([
                         (metric, logs[metric])
@@ -79,3 +86,5 @@ class HeraCallback(Callback):
                 ),
             }
         )
+        self.batch_idx += 1
+

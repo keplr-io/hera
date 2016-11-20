@@ -12,12 +12,17 @@ const DashboardComponent = (props) => (
                 <div>
                   <ModelGraph modelConfig={model.data.modelJson} />
                 </div>
-                {model.data.trainConfig.metrics.map(metricKey => (
-                    <Timeseries
-                      key={metricKey}
-                      modelKey={model.key}
-                      metricKey={metricKey} />
-                ))}
+                {model.data.params.metrics.map((metricKey) =>
+                  <div key={metricKey}>{
+                    model.epochs.map(epoch => (
+                      <Timeseries
+                        key={epoch}
+                        epoch={epoch}
+                        modelKey={model.key}
+                        metricKey={metricKey} />
+                    ))
+                  }</div>
+                )}
             </div>
         ))
     }</div>
