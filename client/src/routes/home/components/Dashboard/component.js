@@ -1,32 +1,30 @@
-import $ from 'jquery';
-import React, {Component, PropTypes} from 'react';
-import Dygraph from 'dygraphs';
+import React, { PropTypes } from 'react';
+import Timeseries from 'components/Timeseries';
+import ModelGraph from 'components/ModelGraph';
+
 import './style.scss';
 
-export default class Dashboard extends Component {
+const DashboardComponent = (props) => (
+    <div>{
+        props.models.map(model => (
+            <div key={model.key}>
+                <div>{model.key}</div>
+                <div>
+                  <ModelGraph modelConfig={model.data.modelJson} />
+                </div>
+                {model.data.trainConfig.metrics.map(metricKey => (
+                    <Timeseries
+                      key={metricKey}
+                      modelKey={model.key}
+                      metricKey={metricKey} />
+                ))}
+            </div>
+        ))
+    }</div>
+);
 
-    static propTypes = {
-    }
-
-    componentDidMount() {
-
-        /**
-         * Expose this globally so that can be updated
-         * without passing through react or redux.
-         */
-
-        window.metricGraphs['mnist-mlp'] = new Dygraph(
-            this.refs.container,
-            window.metricData['mnist-mlp'].acc,
-            {
-                labels: ['batch', 'acc']
-            }
-        );
-    }
-
-    render() {
-        return <div>
-            <div ref='container' />
-        </div>;
-    }
+DashboardComponent.propTypes = {
+    models: PropTypes.array
 };
+
+export default DashboardComponent;

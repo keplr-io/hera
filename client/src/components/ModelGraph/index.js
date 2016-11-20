@@ -22,7 +22,7 @@ export default class ModelGraph extends React.Component {
             elements: computeCytoscapeGraph(this.props.modelConfig),
             layout: {
                 name: 'dagre',
-                rankDir: 'TD'
+                rankDir: 'LR'
             },
             style: [
                 {
@@ -30,9 +30,9 @@ export default class ModelGraph extends React.Component {
                     style: {
                         'content': 'data(id)',
                         'text-opacity': 0.5,
-                        'text-valign': 'center',
-                        'text-halign': 'right',
-                        'text-margin-x': 20,
+                        'text-valign': 'bottom',
+                        'text-halign': 'center',
+                        'text-margin-y': 20,
                         'cursor': 'pointer',
                         shape: 'data(shape)',
                         width: 'mapData(data.config.nb_col, 1, 20, 100, 250)',
