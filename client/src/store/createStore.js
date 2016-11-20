@@ -3,16 +3,17 @@ import thunk from 'redux-thunk';
 import { browserHistory } from 'react-router';
 import makeRootReducer from './reducers';
 import { updateLocation } from './location';
+import { connectToSocket } from './sockets';
 
 export default (initialState = {}) => {
-  // ======================================================
-  // Middleware Configuration
-  // ======================================================
+    // ======================================================
+    // Middleware Configuration
+    // ======================================================
     const middleware = [thunk];
 
-  // ======================================================
-  // Store Enhancers
-  // ======================================================
+    // ======================================================
+    // Store Enhancers
+    // ======================================================
     const enhancers = [];
     if (__DEV__) {
         const devToolsExtension = window.devToolsExtension;
@@ -21,20 +22,21 @@ export default (initialState = {}) => {
         }
     }
 
-  // ======================================================
-  // Store Instantiation and HMR Setup
-  // ======================================================
+    // ======================================================
+    // Store Instantiation and HMR Setup
+    // ======================================================
     const store = createStore(
-    makeRootReducer(),
-    initialState,
-    compose(
-      applyMiddleware(...middleware),
-      ...enhancers
-    )
-  );
+        makeRootReducer(),
+        initialState,
+        compose(
+            applyMiddleware(...middleware),
+            ...enhancers
+        )
+    );
+
     store.asyncReducers = {};
 
-  // To unsubscribe, invoke `store.unsubscribeHistory()` anytime
+    // To unsubscribe, invoke `store.unsubscribeHistory()` anytime
     store.unsubscribeHistory = browserHistory.listen(updateLocation(store));
 
     if (module.hot) {
@@ -43,6 +45,8 @@ export default (initialState = {}) => {
             store.replaceReducer(reducers(store.asyncReducers));
         });
     }
+
+    connectToSocket(store.dispatch);
 
     return store;
 };
