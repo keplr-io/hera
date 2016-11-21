@@ -1,5 +1,4 @@
-playground
-hidden-tests
+*.egg-info
 **/*.pyc
-spy/heraspy.egg-info
-spy/dist
+node_modules
+/build
