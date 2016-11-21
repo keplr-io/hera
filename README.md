@@ -16,32 +16,21 @@ Train/evaluate a Keras model, get metrics streamed to a dashboard in your browse
 
 ```
 
-**Initialize the spy**
+**Add the callback**
 
 ```python
 
-    from heraspy.model import HeraModel
+    from heraspy.callback import HeraCallback
+    from heraspy.dispatchers.socketio_dispatcher import get_socket_dispatcher
 
-    hera_model = HeraModel(
-        {
-            'id': 'my-model' # any ID you want to use to identify your model
-        },
-        {
-            # location of the local hera server, out of the box it's the following
-            'domain': 'localhost',
-            'port': 4000
-        }
+    herasCallback = HeraCallback(
+        'mnist-mlp',
+        get_socket_dispatcher('mnist', 'localhost', '4000')
     )
 
-```
-
-**Plant the spy**
-
-A spy admits a Keras callback that you can attach to your experiment. For example
-```
     model.fit(
         X_train, Y_train,
-        callbacks=[hera_model.callback]
+        callbacks=[herasCallback]
     )
 ```
 
