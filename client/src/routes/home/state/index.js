@@ -16,6 +16,8 @@ export const startEpoch = (modelKey, epoch, metrics) => ({
     }
 });
 
+import appState from './app-state';
+
 export const firstDataPoint = (modelKey, epochIdx, metricKey) => ({
     type: 'first-data-point',
     data: {
@@ -44,14 +46,11 @@ export function modelsReducer(state = [], action) {
 
             return state;
 
-
         default:
             return state;
     }
 }
 
-
-
-export default {
+export default Object.assign({
     models: modelsReducer
-};
+}, appState);

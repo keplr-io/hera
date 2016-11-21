@@ -93,13 +93,17 @@ export function connectToSocket(dispatch) {
 
     socket.on('BATCH_END', body => {
 
-        Object.keys(body.data.metricData).forEach(
-            metricKey => updateLocalStateWithMetric(
-                body.model,
-                metricKey,
-                body.data.idx,
-                body.data.metricData[metricKey]
+        window.requestAnimationFrame(() =>
+
+            Object.keys(body.data.metricData).forEach(
+                metricKey => updateLocalStateWithMetric(
+                    body.model,
+                    metricKey,
+                    body.data.idx,
+                    body.data.metricData[metricKey]
+                )
             )
+
         );
 
     });
@@ -118,11 +122,9 @@ export function connectToSocket(dispatch) {
         //     dispatch(firstDataPoint(modelKey, metricKey));
         // }
 
-        window.requestAnimationFrame(() =>
-            window.metricGraphs[modelKey].active[metricKey].updateOptions({
-                file: metricData
-            })
-        );
+        window.metricGraphs[modelKey].active[metricKey].updateOptions({
+            file: metricData
+        });
     }
 
 }
