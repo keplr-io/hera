@@ -30,13 +30,46 @@
 .graph-toggle-btn {
     cursor: pointer;
     display: inline-block;
-    font-size: 1.5em;
+    font-size: 1.3em;
     color: rgba(0, 0, 0, 0.5);
+    @include simple-transition();
     &:hover {
-        color: rgba(0, 0, 0, 1)
+        color: rgba(0, 0, 0, 1);
     }
 }
 
 .metric-header {
-    padding: 20px 50px;
+    padding: 10px 50px;
+}
+
+.progress-container {
+    .progressbar {
+        background-color: #ccc;
+        text-align: center;
+        height: 3px;
+        width: 0;
+        @include simple-transition()
+        display: inline-block;
+    }
+    .progress-text {
+        display: inline-block;
+        vertical-align: middle;
+        padding: 6px 50px;
+        margin-top: -10px;
+        color: #ccc;
+        height: 3px;
+    }
+}
+
+.model-container {
+    max-width: 1100px;
+    margin: 50px auto;
+    background-color: #fff;
+    padding: 40px 20px;
+    border-radius: 3px;
+    @include simple-shadow();
+}
+
+body {
+    background-color: rgba(0, 0, 0, 0.05)
 }

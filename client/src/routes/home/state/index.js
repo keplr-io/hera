@@ -34,11 +34,16 @@ export function modelsReducer(state = [], action) {
             return [...state, action.model];
 
         case 'start-epoch':
+            const {modelKey, epoch} = action.data;
             /**
              * TODO: implement
              */
+            return state.map(
+                model => model.key === modelKey
+                    ? Object.assign({}, model, {epoch})
+                    : model
+            );
 
-            return state;
         case 'first-data-point':
             /**
              * TODO: implement

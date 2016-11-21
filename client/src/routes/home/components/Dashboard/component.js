@@ -9,11 +9,24 @@ const DashboardComponent = props => (
     <div>{
         props.models.length ? (
             props.models.map(model => (
-                <div key={model.key}>
-                    <div className='model-key'>{model.key}</div>
-                    <div>
+                <div key={model.key} className='model-container'>
+                    <div className='progress-container'>
+                        <div className='progressbar'
+                            style={{
+                                width: `${
+                                    (model.epoch / model.data.params.nb_epoch) * 100
+                                }%`
+                            }}
+                        >
+                        </div>
+                        <span className='progress-text'>
+                            Epoch {model.epoch + 1}/{model.data.params.nb_epoch}
+                        </span>
+                    </div>
+                    <div className='model-graph-container'>
                       <ModelGraph modelConfig={model.data.modelJson} />
                     </div>
+                    <div className='model-key'>{model.key}</div>
                     {model.data.params.metrics.map(metricKey =>
                       <div key={metricKey}>
                         <div className='metric-header'>
@@ -63,7 +76,7 @@ const DashboardComponent = props => (
 DashboardComponent.propTypes = {
     models: PropTypes.array,
     collapsedMap: PropTypes.object,
-    toggleGraph: PropTypes.function
+    toggleGraph: PropTypes.func
 };
 
 export default DashboardComponent;
