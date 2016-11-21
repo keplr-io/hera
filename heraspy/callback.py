@@ -66,7 +66,10 @@ class HeraCallback(Callback):
         self.dispatcher(
             self.namespace,
             EPOCH_END,
-            {'epoch': epoch}
+            {
+                'epoch': epoch,
+                'params': self.params
+            }
         )
 
     def on_batch_end(self, batch, logs):

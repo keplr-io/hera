@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { addModel, startEpoch } from 'routes/home/state';
+import { addModel, startEpoch, firstDataPoint } from 'routes/home/state';
 
 export function connectToSocket(dispatch) {
 
@@ -16,44 +16,78 @@ export function connectToSocket(dispatch) {
 
         Object.assign(
             window.metricData,
-            { [body.model]: {} }
+            {
+                [body.model]: {
+                    static: {},
+                    active: {}
+                }
+            }
         );
 
         Object.assign(
             window.metricGraphs,
-            { [body.model]: {} }
+            {
+                [body.model]: {
+                    static: {},
+                    active: {}
+                }
+            }
         );
 
         dispatch(addModel({
             key: body.model,
-            epochs: [],
             data: body.data
         }));
 
     });
 
     socket.on('EPOCH_BEGIN', body => {
+        const modelMetricData = window.metricData[body.model];
+        const metrics = body.data.params.metrics;
         Object.assign(
-            window.metricData[body.model],
+            modelMetricData,
             {
-                [body.data.epoch]: body.data.params.metrics.reduce(
+                static: metrics.reduce(
                     (metricDataMap, metricKey) => Object.assign(
                         metricDataMap,
-                        { [metricKey]: [[0, 0]] }
+                        {
+                            [metricKey]: [
+                                ...(modelMetricData.static[metricKey] || []),
+                                ...(modelMetricData.active[metricKey] || [])
+                            ]
+                        }
                     ), {}
                 )
             }
         );
 
         Object.assign(
-            window.metricGraphs[body.model],
+            modelMetricData,
             {
-                [body.data.epoch]: {}
+                active: metrics.reduce(
+                    (metricDataMap, metricKey) => Object.assign(
+                        metricDataMap,
+                        { [metricKey]: [] }
+                    ), {}
+                )
             }
         );
 
-        dispatch(
-            startEpoch(body.model, body.data.epoch)
+        // dispatch(
+        //     startEpoch(body.model, body.data.epochyyy)
+        // );
+    });
+
+    socket.on('EPOCH_END', body => {
+        const modelMetricData = window.metricData[body.model];
+        const metrics = body.data.params.metrics;
+
+        metrics.forEach(metricKey =>
+            window.requestAnimationFrame(() =>
+                window.metricGraphs[body.model].static[metricKey].updateOptions({
+                    file: modelMetricData.static[metricKey]
+                })
+            )
         );
     });
 
@@ -62,9 +96,8 @@ export function connectToSocket(dispatch) {
         Object.keys(body.data.metricData).forEach(
             metricKey => updateLocalStateWithMetric(
                 body.model,
-                body.data.epoch,
                 metricKey,
-                body.data.batch,
+                body.data.idx,
                 body.data.metricData[metricKey]
             )
         );
@@ -72,18 +105,25 @@ export function connectToSocket(dispatch) {
     });
 
     return socket;
+
+    function updateLocalStateWithMetric(modelKey, metricKey, batchIdx, metricVal) {
+        const metricData = window.metricData[modelKey].active[metricKey];
+
+        metricData.push([
+            batchIdx,
+            metricVal
+        ]);
+
+        // if (metricData.length === 1) {
+        //     dispatch(firstDataPoint(modelKey, metricKey));
+        // }
+
+        window.requestAnimationFrame(() =>
+            window.metricGraphs[modelKey].active[metricKey].updateOptions({
+                file: metricData
+            })
+        );
+    }
+
 }
 
-function updateLocalStateWithMetric(modelKey, epochIdx, metricKey, batchIdx, metricVal) {
-    const metricData = window.metricData[modelKey][epochIdx][metricKey];
-    metricData.push([
-        batchIdx,
-        metricVal
-    ]);
-
-    window.requestAnimationFrame(() =>
-        window.metricGraphs[modelKey][epochIdx][metricKey].updateOptions({
-            file: metricData
-        })
-    );
-}

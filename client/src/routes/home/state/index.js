@@ -7,31 +7,50 @@ export const addModel = model => ({
     model
 });
 
-export const startEpoch = (modelKey, epoch) => ({
+export const startEpoch = (modelKey, epoch, metrics) => ({
     type: 'start-epoch',
     data: {
         modelKey,
-        epoch
+        epoch,
+        metrics
+    }
+});
+
+export const firstDataPoint = (modelKey, epochIdx, metricKey) => ({
+    type: 'first-data-point',
+    data: {
+        modelKey,
+        epochIdx,
+        metricKey
     }
 });
 
 export function modelsReducer(state = [], action) {
+
     switch (action.type) {
         case 'add-model':
             return [...state, action.model];
+
         case 'start-epoch':
-            return state.map(
-                model => (
-                    model.key === action.data.modelKey ? Object.assign({}, model, {
-                        epochs: [...(model.epochs || []), action.data.epoch]
-                    }) : model
-                )
-            );
+            /**
+             * TODO: implement
+             */
+
+            return state;
+        case 'first-data-point':
+            /**
+             * TODO: implement
+             */
+
+            return state;
+
 
         default:
             return state;
     }
 }
+
+
 
 export default {
     models: modelsReducer
