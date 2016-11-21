@@ -37,6 +37,7 @@ export default class ModelGraph extends React.Component {
                         shape: 'data(shape)',
                         width: 'mapData(data.config.nb_col, 1, 20, 100, 250)',
                         height: 'mapData(data.config.nb_row, 1, 20, 100, 250)',
+                        'background-color': '#ddd'
                     }
                 },
                 {

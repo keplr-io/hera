@@ -73,9 +73,9 @@ export function connectToSocket(dispatch) {
             }
         );
 
-        // dispatch(
-        //     startEpoch(body.model, body.data.epochyyy)
-        // );
+        dispatch(
+            startEpoch(body.model, body.data.epoch)
+        );
     });
 
     socket.on('EPOCH_END', body => {

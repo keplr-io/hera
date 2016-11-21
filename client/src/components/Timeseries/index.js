@@ -27,6 +27,7 @@ export default class Timeseries extends Component {
             {
                 width: 500,
                 height: 150,
+                animatedZooms: true,
                 labels: ['batch', metricKey],
                 color: getMetricColor(metricKey),
                 fillGraph
