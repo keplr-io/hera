@@ -2,7 +2,7 @@
 
 Train/evaluate a Keras model, get metrics streamed to a dashboard in your browser.
 
-![demo](https://cloud.githubusercontent.com/assets/5866348/16719660/13460bee-46e2-11e6-8ab1-56873807390d.gif)
+![demo](https://j.gifs.com/3lO37p.gif)
 
 ## Setting up
 
