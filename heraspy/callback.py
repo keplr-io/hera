@@ -20,18 +20,21 @@ class HeraCallback(Callback):
         A Keras callback streaming data to a hera socket server
     '''
 
-    def __init__(self, namespace, dispatcher, hera_config=None):
+    def __init__(self, namespace, store, hera_config=None):
 
-        self.dispatcher = dispatcher
+        self.store = store
         self.namespace = namespace
         self.hera_config = hera_config
         self.current_epoch = 0
         self.batch_idx = 0
-
+        self.store['on']('stop-training', self.stop_training)
         super(HeraCallback, self).__init__()
 
+    def stop_training(self):
+        self.model.stop_training = True
+
     def on_train_begin(self, *args):
-        self.dispatcher(
+        self.store['dispatch'](
             self.namespace,
             TRAIN_BEGIN,
             {
@@ -40,10 +43,8 @@ class HeraCallback(Callback):
             }
         )
 
-
     def on_train_end(self, *args):
-
-        self.dispatcher(
+        self.store['dispatch'](
             self.namespace,
             TRAIN_END,
             None
@@ -52,7 +53,7 @@ class HeraCallback(Callback):
 
     def on_epoch_begin(self, epoch, *args):
         self.current_epoch = epoch
-        self.dispatcher(
+        self.store['dispatch'](
             self.namespace,
             EPOCH_BEGIN,
             {
@@ -63,7 +64,7 @@ class HeraCallback(Callback):
         )
 
     def on_epoch_end(self, epoch, *args):
-        self.dispatcher(
+        self.store['dispatch'](
             self.namespace,
             EPOCH_END,
             {
@@ -73,7 +74,7 @@ class HeraCallback(Callback):
         )
 
     def on_batch_end(self, batch, logs):
-        self.dispatcher(
+        self.store['dispatch'](
             self.namespace,
             BATCH_END,
             {
