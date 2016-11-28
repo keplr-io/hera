@@ -8,6 +8,29 @@
     padding: 20px 50px;
     font-size: 1.5em;
     color: rgba(0, 0, 0, 0.6);
+    display: inline-block;
+}
+
+.stop-btn {
+    display: inline-block;
+    padding: 20px 40px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    color: rgba(0, 0, 0, 0.6);
+    cursor: pointer;
+    @include simple-shadow();
+    @include simple-transition();
+    &:hover {
+        color: rgba(0, 0, 0, 0.8)
+    }
+}
+
+.kill-scheduled-msg {
+    display: inline-block;
+    padding: 20px 40px;
+    border-radius: 3px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: rgba(0, 0, 0, 0.3);
 }
 
 .metric-key {

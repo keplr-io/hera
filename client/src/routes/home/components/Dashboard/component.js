@@ -28,12 +28,21 @@ const DashboardComponent = props => (
                     </div>
                     <div>
                         <div className='model-key'>{model.key}</div>
-                        <div onClick={
-                                () => props.scheduleKill(model.key)
-                            }
-                          className='stop-btn'>
-                            Stop training
-                        </div>
+                        {
+                            model.killScheduled ? (
+                                <div className='kill-scheduled-msg'>
+                                    Will stop after this epoch.
+                                </div>
+                            ) : (
+                                <div onClick={
+                                        () => props.scheduleKill(model.key)
+                                    }
+                                  className='stop-btn'>
+                                    Stop training
+                                </div>
+                            )
+                        }
+                        
                     </div>
                     {model.data.params.metrics.map(metricKey =>
                       <div key={metricKey}>

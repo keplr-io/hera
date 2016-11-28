@@ -5,7 +5,17 @@
 import {scheduleKillReq} from '../resource';
 
 export const scheduleKill = modelKey =>
-    dispatch => scheduleKillReq(modelKey);
+    dispatch => scheduleKillReq(modelKey).then(
+        dispatch(killScheduled(modelKey))
+    );
+
+export const killScheduled = modelKey => ({
+    type: 'update-kill-scheduled',
+    data: {
+        modelKey,
+        killScheduled: true
+    }
+});
 
 export const addModel = model => ({
     type: 'add-model',
@@ -32,31 +42,30 @@ export const firstDataPoint = (modelKey, epochIdx, metricKey) => ({
 
 export function modelsReducer(state = [], action) {
 
-    switch (action.type) {
-        case 'add-model':
-            return [...state, action.model];
-
-        case 'start-epoch':
+    const handlers = {
+        'add-model': (state, action) => [...state, action.model],
+        'start-epoch': (state, action) => {
             const {modelKey, epoch} = action.data;
-            /**
-             * TODO: implement
-             */
             return state.map(
                 model => model.key === modelKey
                     ? Object.assign({}, model, {epoch})
                     : model
             );
+        },
+        'update-kill-scheduled': (state, action) => {
+            const {modelKey, killScheduled} = action.data;
 
-        case 'first-data-point':
-            /**
-             * TODO: implement
-             */
+            return state.map(
+                model => model.key === modelKey
+                    ? Object.assign({}, model, {
+                        killScheduled
+                    })
+                    : model
+            );
+        }
+    };
 
-            return state;
-
-        default:
-            return state;
-    }
+    return handlers[action.type] ? handlers[action.type](state, action) : state;
 }
 
 export default {
