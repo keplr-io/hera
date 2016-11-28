@@ -1,8 +1,11 @@
-from socketIO_client import SocketIO
+from socketIO_client import SocketIO, LoggingNamespace
 
-def get_socketio_store(domain, port):
+def get_socketio_store(domain, port, debug=False):
 
-    client = SocketIO(domain, port)
+    if debug is True:
+        init_logging()
+
+    client = SocketIO(domain, int(port), LoggingNamespace)
 
     def dispatch(model_key, event, data):
         return client.emit(
@@ -20,3 +23,8 @@ def get_socketio_store(domain, port):
         'dispatch': dispatch,
         'on': on
     }
+
+def init_logging():
+    import logging
+    logging.getLogger('socketIO-client').setLevel(logging.DEBUG)
+    logging.basicConfig()

@@ -26,7 +26,15 @@ const DashboardComponent = props => (
                     <div className='model-graph-container'>
                       <ModelGraph modelConfig={model.data.modelJson} />
                     </div>
-                    <div className='model-key'>{model.key}</div>
+                    <div>
+                        <div className='model-key'>{model.key}</div>
+                        <div onClick={
+                                () => props.scheduleKill(model.key)
+                            }
+                          className='stop-btn'>
+                            Stop training
+                        </div>
+                    </div>
                     {model.data.params.metrics.map(metricKey =>
                       <div key={metricKey}>
                         <div className='metric-header'>
@@ -76,7 +84,8 @@ const DashboardComponent = props => (
 DashboardComponent.propTypes = {
     models: PropTypes.array,
     collapsedMap: PropTypes.object,
-    toggleGraph: PropTypes.func
+    toggleGraph: PropTypes.func,
+    stopTraining: PropTypes.func
 };
 
 export default DashboardComponent;

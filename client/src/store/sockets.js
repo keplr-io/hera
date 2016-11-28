@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { addModel, startEpoch, firstDataPoint } from 'routes/home/state';
+import { addModel, startEpoch, firstDataPoint } from 'routes/home/state/models-state';
 
 export function connectToSocket(dispatch) {
 
