@@ -10,7 +10,7 @@ export function connectToSocket(dispatch) {
     window.metricData = {};
     window.metricGraphs = {};
 
-    const socket = io.connect('http://localhost:4000');
+    const socket = io.connect(HERA_HOST);
 
     socket.on('TRAIN_BEGIN', body => {
 

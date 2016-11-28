@@ -65,6 +65,11 @@ webpackConfig.plugins = [
     minify   : {
       collapseWhitespace : true
     }
+  }),
+  new webpack.DefinePlugin({
+    HERA_HOST: JSON.stringify(
+      process.env.HERA_HOST ? `http://${process.env.HERA_HOST}` : 'http://localhost:4000'
+    )
   })
 ]
 

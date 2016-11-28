@@ -1,5 +1,5 @@
 export const scheduleKillReq = model =>
-    fetch('http://localhost:4000/schedule-kill', {
+    fetch(`${HERA_HOST}/schedule-kill`, {
         method: 'post',
         body: JSON.stringify({ model }),
         headers: {
