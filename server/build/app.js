@@ -21,6 +21,10 @@ var _bodyParser = require('body-parser');
 
 var _bodyParser2 = _interopRequireDefault(_bodyParser);
 
+var _socket = require('socket.io');
+
+var _socket2 = _interopRequireDefault(_socket);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function getApp() {
@@ -29,6 +33,6 @@ function getApp() {
     app.use((0, _cors2.default)());
 
     var server = _http2.default.Server(app);
-
-    return { app: app, server: server };
+    var io = (0, _socket2.default)(server);
+    return { app: app, server: server, io: io };
 }

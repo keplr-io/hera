@@ -1,11 +1,9 @@
-import socketIO from 'socket.io';
 import appEvents from './app-events';
 
-export function applySocketIOControl(app, server) {
-    const io = socketIO(server);
+export function applySocketIOControl(server, io) {
     io.on('connection', socket => {
         initDebugLogs(socket);
-        return appEvents.map(
+        return Object.keys(appEvents).map(
             evtKey => socket.on(
                 evtKey,
                 data => io.sockets.emit(evtKey, data)

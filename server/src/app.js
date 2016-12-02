@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 
 import bodyParser from 'body-parser';
+import socketIO from 'socket.io';
 
 export function getApp() {
     const app = express();
@@ -10,6 +11,6 @@ export function getApp() {
     app.use(cors());
 
     const server = http.Server(app);
-
-    return { app, server };
+    const io = socketIO(server);
+    return { app, server, io };
 }
