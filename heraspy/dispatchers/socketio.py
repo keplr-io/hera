@@ -1,6 +1,6 @@
 from socketIO_client import SocketIO, LoggingNamespace
 
-def get_socketio_store(domain, port, debug=False):
+def get_socketio_dispatcher(domain, port, debug=False):
 
     if debug is True:
         init_logging()

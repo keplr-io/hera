@@ -7,13 +7,12 @@ import json
 
 from keras.callbacks import Callback
 from heraspy.util import to_jsonable_dict
-from heraspy.stores.socketio_store import get_socketio_store
+from heraspy.dispatchers.socketio import get_socketio_dispatcher
 import requests
 from heraspy.events import (
     TRAIN_BEGIN, TRAIN_END,
     EPOCH_BEGIN, EPOCH_END,
-    BATCH_END,
-    KILL_TRAINING
+    BATCH_END
 )
 
 class HeraCallback(Callback):
@@ -22,12 +21,12 @@ class HeraCallback(Callback):
         A Keras callback streaming data to a hera socket server
     '''
 
-    def __init__(self, model_key, host, port, store=None, hera_config=None):
+    def __init__(self, model_key, host, port, dispatch=None, hera_config=None):
 
-        if store is None:
-            self.store = get_socketio_store(host, port)
+        if dispatch is None:
+            self.dispatch = get_socketio_dispatcher(host, port)
         else:
-            self.store = store
+            self.dispatch = dispatch
 
         self.model_key = model_key
         self.api_url = 'http://{}:{}'.format(host, port)
@@ -37,7 +36,7 @@ class HeraCallback(Callback):
         super(HeraCallback, self).__init__()
 
     def on_train_begin(self, *args):
-        self.store['dispatch'](
+        self.dispatch(
             self.model_key,
             TRAIN_BEGIN,
             {
@@ -47,7 +46,7 @@ class HeraCallback(Callback):
         )
 
     def on_train_end(self, *args):
-        self.store['dispatch'](
+        self.dispatch(
             self.model_key,
             TRAIN_END,
             None
@@ -55,7 +54,7 @@ class HeraCallback(Callback):
 
     def on_epoch_begin(self, epoch, *args):
         self.current_epoch = epoch
-        self.store['dispatch'](
+        self.dispatch(
             self.model_key,
             EPOCH_BEGIN,
             {
@@ -76,7 +75,7 @@ class HeraCallback(Callback):
                 {'model': self.model_key}
             )
 
-        self.store['dispatch'](
+        self.dispatch(
             self.model_key,
             EPOCH_END,
             {
@@ -86,7 +85,7 @@ class HeraCallback(Callback):
         )
 
     def on_batch_end(self, batch, logs):
-        self.store['dispatch'](
+        self.dispatch(
             self.model_key,
             BATCH_END,
             {
@@ -102,4 +101,5 @@ class HeraCallback(Callback):
                 ),
             }
         )
+
         self.batch_idx += 1
