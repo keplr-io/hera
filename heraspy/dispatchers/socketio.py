@@ -16,13 +16,7 @@ def get_socketio_dispatcher(domain, port, debug=False):
             }
         )
 
-    def on(evt, handler):
-        return client.on(evt, handler)
-
-    return {
-        'dispatch': dispatch,
-        'on': on
-    }
+    return dispatch
 
 def init_logging():
     import logging

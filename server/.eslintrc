@@ -20,6 +20,8 @@
     "semi" : [2, "always"],
     "indent": [2, 4],
     "max-len": [2, 120, 2],
+    "space-before-function-paren": 0,
+    "padded-blocks": 0,
     "standard/computed-property-even-spacing": "off"
   }
 }
