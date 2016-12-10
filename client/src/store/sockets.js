@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { addModel, startEpoch, firstDataPoint } from 'routes/home/state/models-state';
+import { addModel, startEpoch, stopTraining } from 'routes/home/state/models-state';
 
 export function connectToSocket(dispatch) {
 
@@ -41,25 +41,13 @@ export function connectToSocket(dispatch) {
 
     });
 
+    socket.on('TRAIN_END', body => dispatch(
+        stopTraining(body.model)
+    ));
+
     socket.on('EPOCH_BEGIN', body => {
         const modelMetricData = window.metricData[body.model];
         const metrics = body.data.params.metrics;
-        Object.assign(
-            modelMetricData,
-            {
-                static: metrics.reduce(
-                    (metricDataMap, metricKey) => Object.assign(
-                        metricDataMap,
-                        {
-                            [metricKey]: [
-                                ...(modelMetricData.static[metricKey] || []),
-                                ...(modelMetricData.active[metricKey] || [])
-                            ]
-                        }
-                    ), {}
-                )
-            }
-        );
 
         Object.assign(
             modelMetricData,
@@ -81,6 +69,8 @@ export function connectToSocket(dispatch) {
     socket.on('EPOCH_END', body => {
         const modelMetricData = window.metricData[body.model];
         const metrics = body.data.params.metrics;
+
+        updateStaticMetricData(body.model, metrics);
 
         metrics.forEach(metricKey =>
             window.requestAnimationFrame(() =>
@@ -109,6 +99,27 @@ export function connectToSocket(dispatch) {
     });
 
     return socket;
+
+    function updateStaticMetricData(model, metrics) {
+        const modelMetricData = window.metricData[model];
+
+        Object.assign(
+            modelMetricData,
+            {
+                static: metrics.reduce(
+                    (metricDataMap, metricKey) => Object.assign(
+                        metricDataMap,
+                        {
+                            [metricKey]: [
+                                ...(modelMetricData.static[metricKey] || []),
+                                ...(modelMetricData.active[metricKey] || [])
+                            ]
+                        }
+                    ), {}
+                )
+            }
+        );
+    }
 
     function updateLocalStateWithMetric(modelKey, metricKey, batchIdx, metricVal) {
         const metricData = window.metricData[modelKey].active[metricKey];

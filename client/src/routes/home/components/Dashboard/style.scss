@@ -93,6 +93,13 @@
     @include simple-shadow();
 }
 
+.model-graphs-container {
+    text-align: center;
+    .plot-container {
+        margin: auto;
+    }
+}
+
 body {
     background-color: rgba(0, 0, 0, 0.05)
 }

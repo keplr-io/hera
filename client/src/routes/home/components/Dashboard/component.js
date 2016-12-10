@@ -29,20 +29,25 @@ const DashboardComponent = props => (
                     <div>
                         <div className='model-key'>{model.key}</div>
                         {
-                            model.killScheduled ? (
-                                <div className='kill-scheduled-msg'>
-                                    Will stop after this epoch.
-                                </div>
-                            ) : (
-                                <div onClick={
-                                        () => props.scheduleKill(model.key)
-                                    }
-                                  className='stop-btn'>
-                                    Stop training
-                                </div>
-                            )
+                            model.trainingStopped ? (
+                                    <div className='kill-scheduled-msg'>
+                                        Finished training.
+                                    </div>
+                                ) : (
+                                    model.killScheduled ? (
+                                        <div className='kill-scheduled-msg'>
+                                            Will stop after this epoch.
+                                        </div>
+                                    ) : (
+                                        <div onClick={
+                                                () => props.scheduleKill(model.key)
+                                            }
+                                          className='stop-btn'>
+                                            Stop training
+                                        </div>
+                                    )
+                                )
                         }
-                        
                     </div>
                     {model.data.params.metrics.map(metricKey =>
                       <div key={metricKey}>
@@ -59,18 +64,23 @@ const DashboardComponent = props => (
                             props.collapsedMap[getGraphKey(model.key, metricKey)]
                                 ? ''
                                 : (
-                                <div>
-                                  <Timeseries
-                                    className='model-plot'
-                                    graphKey='static'
-                                    modelKey={model.key}
-                                    metricKey={metricKey}
-                                    fillGraph />
-                                  <Timeseries
-                                    className='model-plot'
-                                    graphKey='active'
-                                    modelKey={model.key}
-                                    metricKey={metricKey} />
+                                <div className='model-graphs-container'>
+                                    {
+                                        (model.epoch > 0 || model.trainingStopped)
+                                          ? <Timeseries
+                                            className='model-plot'
+                                            graphKey='static'
+                                            modelKey={model.key}
+                                            metricKey={metricKey}
+                                            fillGraph /> : ''
+                                    }
+                                    {
+                                      model.trainingStopped ? '' : <Timeseries
+                                        className='model-plot'
+                                        graphKey='active'
+                                        modelKey={model.key}
+                                        metricKey={metricKey} />
+                                    }
                                 </div>
                             )
                         }
