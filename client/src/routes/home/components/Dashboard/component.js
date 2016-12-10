@@ -12,13 +12,12 @@ const DashboardComponent = props => (
                 <div key={model.key} className='model-container'>
                     <div className='progress-container'>
                         <div className='progressbar'
-                            style={{
-                                width: `${
+                          style={{
+                              width: `${
                                     (model.epoch / model.data.params.nb_epoch) * 100
                                 }%`
-                            }}
-                        >
-                        </div>
+                          }}
+                         />
                         <span className='progress-text'>
                             Epoch {model.epoch + 1}/{model.data.params.nb_epoch}
                         </span>

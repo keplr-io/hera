@@ -1,3 +1,3 @@
-"use strict";
+'use strict';
 
 rabbitmq - ctl.js;

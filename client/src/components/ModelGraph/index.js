@@ -64,7 +64,7 @@ export default class ModelGraph extends React.Component {
     render() {
         return (
             <div className='model-graph-container'>
-                <div ref='graphvisContainer' className='graph-vis-container'></div>
+                <div ref='graphvisContainer' className='graph-vis-container' />
             </div>
 
         );

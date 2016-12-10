@@ -20,7 +20,7 @@ export function applyAmqpCtl(io, { amqpUrl, amqpQueue }) {
                             io.sockets.emit(event, {
                                 model,
                                 data
-                            })
+                            });
                         }
                     } catch (e) {
                         console.log('corrupt message', e);
@@ -30,4 +30,4 @@ export function applyAmqpCtl(io, { amqpUrl, amqpQueue }) {
             );
 
         }).catch(console.warn);
-    }
+}
