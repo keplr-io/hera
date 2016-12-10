@@ -9,6 +9,10 @@ var _appEvents = require('./app-events');
 
 var _appEvents2 = _interopRequireDefault(_appEvents);
 
+var _chalk = require('chalk');
+
+var _chalk2 = _interopRequireDefault(_chalk);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function applySocketIOControl(server, io) {
@@ -23,8 +27,8 @@ function applySocketIOControl(server, io) {
 }
 
 function initDebugLogs(socket) {
-    console.info('a client connected');
+    console.info(_chalk2.default.green('a client connected'));
     socket.on('disconnect', function () {
-        return console.info('a client disconnected');
+        return console.info(_chalk2.default.blue('a client disconnected'));
     });
 }

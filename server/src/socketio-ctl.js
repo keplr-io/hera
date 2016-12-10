@@ -1,4 +1,5 @@
 import appEvents from './app-events';
+import chalk from 'chalk';
 
 export function applySocketIOControl(server, io) {
     io.on('connection', socket => {
@@ -12,9 +13,13 @@ export function applySocketIOControl(server, io) {
     });
 }
 
-function initDebugLogs (socket) {
-    console.info('a client connected');
+function initDebugLogs(socket) {
+    console.info(
+        chalk.green('a client connected')
+    );
     socket.on('disconnect',
-        () => console.info('a client disconnected')
+        () => console.info(
+            chalk.blue('a client disconnected')
+        )
     );
 }

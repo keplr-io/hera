@@ -1,4 +1,5 @@
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
+import chalk from 'chalk';
 import amqp from 'amqplib';
 import appEvents from './app-events';
 
@@ -9,7 +10,11 @@ export function applyAmqpCtl(io, { amqpUrl, amqpQueue }) {
         .then(ch => {
             ch.assertQueue(amqpQueue, { durable: false });
 
-            console.log(` [*] Waiting for messages in ${amqpQueue}`);
+            console.log(
+                chalk.yellow(
+                    `Waiting for messages in ${amqpQueue}`
+                )
+            );
 
             ch.consume(
                 amqpQueue,
@@ -23,7 +28,9 @@ export function applyAmqpCtl(io, { amqpUrl, amqpQueue }) {
                             });
                         }
                     } catch (e) {
-                        console.log('corrupt message', e);
+                        console.error(
+                            chalk.red('corrupt message', e)
+                        );
                     }
                 },
                 { noAck: true }

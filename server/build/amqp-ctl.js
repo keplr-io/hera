@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.applyAmqpCtl = applyAmqpCtl;
 
+var _chalk = require('chalk');
+
+var _chalk2 = _interopRequireDefault(_chalk);
+
 var _amqplib = require('amqplib');
 
 var _amqplib2 = _interopRequireDefault(_amqplib);
@@ -26,7 +30,7 @@ function applyAmqpCtl(io, _ref) {
     }).then(function (ch) {
         ch.assertQueue(amqpQueue, { durable: false });
 
-        console.log(' [*] Waiting for messages in ' + amqpQueue);
+        console.log(_chalk2.default.yellow('Waiting for messages in ' + amqpQueue));
 
         ch.consume(amqpQueue, function (msg) {
             try {
@@ -42,7 +46,7 @@ function applyAmqpCtl(io, _ref) {
                     });
                 }
             } catch (e) {
-                console.log('corrupt message', e);
+                console.error(_chalk2.default.red('corrupt message', e));
             }
         }, { noAck: true });
     }).catch(console.warn);
